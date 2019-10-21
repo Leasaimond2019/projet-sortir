@@ -66,7 +66,7 @@ class Participant
      * @ORM\ManyToMany(targetEntity="App\Entity\Sortie")
      */
     private $sorties;
-
+ 
     public function getId(): ?int
     {
         return $this->id;
