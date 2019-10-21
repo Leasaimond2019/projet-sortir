@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,6 +56,16 @@ class Participant
      * @ORM\Column(type="boolean")
      */
     private $actif;
+    /**
+     * @var Site
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
+     */
+    private $no_site;
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="App\Entity\Sortie")
+     */
+    private $sorties;
 
     public function getId(): ?int
     {
@@ -156,4 +167,37 @@ class Participant
 
         return $this;
     }
+
+    /**
+     * @return Site
+     */
+    public function getNoSite(): Site
+    {
+        return $this->no_site;
+    }
+
+    /**
+     * @param Site $no_site
+     */
+    public function setNoSite(Site $no_site): void
+    {
+        $this->no_site = $no_site;
+    }
+
+    /**
+     * @return Sortie
+     */
+    public function getSorties(): Sortie
+    {
+        return $this->sorties;
+    }
+
+    /**
+     * @param Sortie $sorties
+     */
+    public function setSorties(Sortie $sorties): void
+    {
+        $this->sorties = $sorties;
+    }
+
 }

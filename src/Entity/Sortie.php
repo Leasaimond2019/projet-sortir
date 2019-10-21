@@ -60,6 +60,26 @@ class Sortie
      * @ORM\Column(type="integer")
      */
     private $organisateur;
+    /**
+     * @var Etat
+     * @ORM\ManyToOne(targetEntity="App\Entity\Etat")
+     */
+    private $no_etat;
+    /**
+     * @var Lieu
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lieu")
+     */
+    private $no_lieu;
+    /**
+     * @var Site
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
+     */
+    private $no_site;
+    /**
+     * @var Participant
+     * @ORM\ManyToOne(targetEntity="App\Entity\Participant")
+     */
+    private $no_organisateur;
 
     public function getId(): ?int
     {
@@ -173,4 +193,69 @@ class Sortie
 
         return $this;
     }
+
+    /**
+     * @return Etat
+     */
+    public function getNoEtat(): Etat
+    {
+        return $this->no_etat;
+    }
+
+    /**
+     * @param Etat $no_etat
+     */
+    public function setNoEtat(Etat $no_etat): void
+    {
+        $this->no_etat = $no_etat;
+    }
+
+    /**
+     * @return Lieu
+     */
+    public function getNoLieu(): Lieu
+    {
+        return $this->no_lieu;
+    }
+
+    /**
+     * @param Lieu $no_lieu
+     */
+    public function setNoLieu(Lieu $no_lieu): void
+    {
+        $this->no_lieu = $no_lieu;
+    }
+
+    /**
+     * @return Site
+     */
+    public function getNoSite(): Site
+    {
+        return $this->no_site;
+    }
+
+    /**
+     * @param Site $no_site
+     */
+    public function setNoSite(Site $no_site): void
+    {
+        $this->no_site = $no_site;
+    }
+
+    /**
+     * @return Participant
+     */
+    public function getNoOrganisateur(): Participant
+    {
+        return $this->no_organisateur;
+    }
+
+    /**
+     * @param Participant $no_organisateur
+     */
+    public function setNoOrganisateur(Participant $no_organisateur): void
+    {
+        $this->no_organisateur = $no_organisateur;
+    }
+
 }

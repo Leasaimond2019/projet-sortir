@@ -35,6 +35,11 @@ class Lieu
      * @ORM\Column(type="float", nullable=true)
      */
     private $longitude;
+    /**
+     * @var Ville
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ville")
+     */
+    private $no_ville;
 
     public function getId(): ?int
     {
@@ -88,4 +93,21 @@ class Lieu
 
         return $this;
     }
+
+    /**
+     * @return Ville
+     */
+    public function getNoVille(): Ville
+    {
+        return $this->no_ville;
+    }
+
+    /**
+     * @param Ville $no_ville
+     */
+    public function setNoVille(Ville $no_ville): void
+    {
+        $this->no_ville = $no_ville;
+    }
+
 }
