@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\UserType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ObjectManager;
+
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
@@ -33,4 +39,29 @@ class UserController extends AbstractController
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
+
+    /**
+    * @Route("/monCompte/profil", name="account_profile")
+    */
+    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user) : Response
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manager->persist($user);
+            $manager->flush();
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('user/editProfil.html.twig', [
+            'form'=> $form->createView(),
+            'user'=>$user
+        ]);
+    }
+
 }
+
