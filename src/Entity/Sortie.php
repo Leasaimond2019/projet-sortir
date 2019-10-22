@@ -50,11 +50,6 @@ class Sortie
     private $description;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $etat_sortie;
-
-    /**
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $url_photo;
