@@ -51,10 +51,6 @@ class SortieController extends AbstractController
             $numUser = $em->getRepository(User::class)->find(1);
             $sortie->setNoOrganisateur($numUser);
             $em->persist($sortie);
-
-            // ajout de la durée de la sortie
-            $sortie->setDateCloture(new \DateTime());
-            $sortie->setDateCloture($sortie->getDateDebut()->add(new \DateInterval("'PT".$sortie->getDuree()."H'")));
             $em->flush();
             $this->addFlash('success', "La sortie a été créée");
             return $this->redirectToRoute("home");

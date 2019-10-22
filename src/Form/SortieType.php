@@ -26,7 +26,11 @@ class SortieType extends AbstractType
                 'widget' => 'single_text'
             ])
             ->add('duree', IntegerType::class, [
-                'label' => 'Durée de la sortie'
+                'label' => 'Durée de la sortie (en minutes)'
+            ])
+            ->add('date_cloture', DateTimeType::class, [
+                'label' => 'Date et heure limite d\'inscription',
+                'widget' => 'single_text'
             ])
             ->add('nb_inscription_max', IntegerType::class, [
                 'label' => 'Nombre maximum de participants'
