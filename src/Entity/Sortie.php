@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SortieRepository")
@@ -57,29 +58,32 @@ class Sortie
     private $url_photo;
 
     /**
+     *  @var Etat
+     * @ORM\ManyToOne(targetEntity="App\Entity\Etat")
      * @ORM\Column(type="integer")
      */
-    private $organisateur;
-    /**
-     * @var Etat
-     * @ORM\ManyToOne(targetEntity="App\Entity\Etat")
-     */
     private $no_etat;
+
     /**
      * @var Lieu
      * @ORM\ManyToOne(targetEntity="App\Entity\Lieu")
+     * @ORM\Column(type="integer")
      */
     private $no_lieu;
-    /**
-     * @var Site
-     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
-     */
-    private $no_site;
+
     /**
      * @var Participant
      * @ORM\ManyToOne(targetEntity="App\Entity\Participant")
+     * @ORM\Column(type="integer")
      */
     private $no_organisateur;
+
+    /**
+     * @var Site
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
+     * @ORM\Column(type="integer")
+     */
+    private $site;
 
     public function getId(): ?int
     {
@@ -182,80 +186,51 @@ class Sortie
         return $this;
     }
 
-    public function getOrganisateur(): ?int
-    {
-        return $this->organisateur;
-    }
-
-    public function setOrganisateur(int $organisateur): self
-    {
-        $this->organisateur = $organisateur;
-
-        return $this;
-    }
-
-    /**
-     * @return Etat
-     */
-    public function getNoEtat(): Etat
+    public function getNoEtat(): ?int
     {
         return $this->no_etat;
     }
 
-    /**
-     * @param Etat $no_etat
-     */
-    public function setNoEtat(Etat $no_etat): void
+    public function setNoEtat(int $no_etat): self
     {
         $this->no_etat = $no_etat;
+
+        return $this;
     }
 
-    /**
-     * @return Lieu
-     */
-    public function getNoLieu(): Lieu
+    public function getNoLieu(): ?int
     {
         return $this->no_lieu;
     }
 
-    /**
-     * @param Lieu $no_lieu
-     */
-    public function setNoLieu(Lieu $no_lieu): void
+    public function setNoLieu(int $no_lieu): self
     {
         $this->no_lieu = $no_lieu;
+
+        return $this;
     }
 
-    /**
-     * @return Site
-     */
-    public function getNoSite(): Site
-    {
-        return $this->no_site;
-    }
-
-    /**
-     * @param Site $no_site
-     */
-    public function setNoSite(Site $no_site): void
-    {
-        $this->no_site = $no_site;
-    }
-
-    /**
-     * @return Participant
-     */
-    public function getNoOrganisateur(): Participant
+    public function getNoOrganisateur(): ?int
     {
         return $this->no_organisateur;
     }
 
-    /**
-     * @param Participant $no_organisateur
-     */
-    public function setNoOrganisateur(Participant $no_organisateur): void
+    public function setNoOrganisateur(int $no_organisateur): self
     {
         $this->no_organisateur = $no_organisateur;
+
+        return $this;
     }
 
+    public function getSite(): ?int
+    {
+        return $this->site;
+    }
+
+    public function setSite(int $site): self
+    {
+        $this->site = $site;
+
+        return $this;
+    }
 }
