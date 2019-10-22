@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,11 +39,21 @@ class Lieu
     private $longitude;
 
     /**
-     * @ORM\Column(type="integer")
-     * @var Ville
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ville")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="no_lieu")
+     */
+    private $sorties;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ville", inversedBy="lieus")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $no_ville;
+
+    public function __construct()
+    {
+        $this->sorties = new ArrayCollection();
+    }
+
 
 
     public function getId(): ?int
@@ -97,16 +109,46 @@ class Lieu
         return $this;
     }
 
-    public function getNoVille(): ?int
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sortie $sorty): self
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties[] = $sorty;
+            $sorty->setNoLieu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sortie $sorty): self
+    {
+        if ($this->sorties->contains($sorty)) {
+            $this->sorties->removeElement($sorty);
+            // set the owning side to null (unless already changed)
+            if ($sorty->getNoLieu() === $this) {
+                $sorty->setNoLieu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNoVille(): ?Ville
     {
         return $this->no_ville;
     }
 
-    public function setNoVille(int $no_ville): self
+    public function setNoVille(?Ville $no_ville): self
     {
         $this->no_ville = $no_ville;
 
         return $this;
     }
-
 }

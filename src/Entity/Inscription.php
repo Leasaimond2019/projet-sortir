@@ -22,14 +22,17 @@ class Inscription
     private $date_inscription;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Sortie", inversedBy="no_inscription")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $no_sortie;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="no_inscription")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $no_participant;
+    private $no_user;
+
 
     public function getId(): ?int
     {
@@ -48,26 +51,26 @@ class Inscription
         return $this;
     }
 
-    public function getNoSortie(): ?int
+    public function getNoSortie(): ?Sortie
     {
         return $this->no_sortie;
     }
 
-    public function setNoSortie(int $no_sortie): self
+    public function setNoSortie(?Sortie $no_sortie): self
     {
         $this->no_sortie = $no_sortie;
 
         return $this;
     }
 
-    public function getNoParticipant(): ?int
+    public function getNoUser(): ?User
     {
-        return $this->no_participant;
+        return $this->no_user;
     }
 
-    public function setNoParticipant(int $no_participant): self
+    public function setNoUser(?User $no_user): self
     {
-        $this->no_participant = $no_participant;
+        $this->no_user = $no_user;
 
         return $this;
     }

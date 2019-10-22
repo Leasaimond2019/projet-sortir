@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -59,11 +61,26 @@ class User implements UserInterface
     private $actif;
 
     /**
-     * @var Site
-     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="no_organisateur")
+     */
+    private $sorties;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $no_site;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_user")
+     */
+    private $no_inscription;
+
+    public function __construct()
+    {
+        $this->sorties = new ArrayCollection();
+        $this->no_inscription = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -203,14 +220,76 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getNoSite(): ?int
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sortie $sorty): self
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties[] = $sorty;
+            $sorty->setNoOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sortie $sorty): self
+    {
+        if ($this->sorties->contains($sorty)) {
+            $this->sorties->removeElement($sorty);
+            // set the owning side to null (unless already changed)
+            if ($sorty->getNoOrganisateur() === $this) {
+                $sorty->setNoOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNoSite(): ?Site
     {
         return $this->no_site;
     }
 
-    public function setNoSite(int $no_site): self
+    public function setNoSite(?Site $no_site): self
     {
         $this->no_site = $no_site;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Inscription[]
+     */
+    public function getNoInscription(): Collection
+    {
+        return $this->no_inscription;
+    }
+
+    public function addNoInscription(Inscription $noInscription): self
+    {
+        if (!$this->no_inscription->contains($noInscription)) {
+            $this->no_inscription[] = $noInscription;
+            $noInscription->setNoUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoInscription(Inscription $noInscription): self
+    {
+        if ($this->no_inscription->contains($noInscription)) {
+            $this->no_inscription->removeElement($noInscription);
+            // set the owning side to null (unless already changed)
+            if ($noInscription->getNoUser() === $this) {
+                $noInscription->setNoUser(null);
+            }
+        }
 
         return $this;
     }
