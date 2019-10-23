@@ -29,7 +29,7 @@ class SiteController extends AbstractController
         $sitesRepo = $this->getDoctrine()->getRepository(Site::class);
         $sites = $sitesRepo->findAll();
 
-        return $this->render('sortie/manage.html.twig', [
+        return $this->render('site/manage.html.twig', [
             'sites' => $sites,
         ]);
     }
@@ -47,7 +47,7 @@ class SiteController extends AbstractController
         $form = $this->createForm(SiteType::class, $site);
         $form->handleRequest($request);
 
-        return $this->render('sortie/manage.html.twig', [
+        return $this->render('site/manage.html.twig', [
             'sites' => $sites,
             'siteForm'=>$form->createView(),
             'id'=>$request->attributes->get('id'),
