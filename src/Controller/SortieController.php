@@ -14,7 +14,10 @@ use App\Form\UserType;
 use App\Repository\EtatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use phpDocumentor\Reflection\Types\Integer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,7 +47,16 @@ class SortieController extends AbstractController
     public function create(EntityManagerInterface $em, Request $request) {
 
         // Lieu
-        $lieu = $this->createLieuPopup($em,$request);
+        $lieu = new Lieu();
+        $lieuForm = $this->createForm(LieuType::class, $lieu);
+        $lieuForm->handleRequest($request);
+
+        if($lieuForm->isSubmitted() && $lieuForm->isValid()) {
+            $em->persist($lieu);
+            $em->flush();
+            $this->addFlash('success','Le lieu a été ajouté');
+            return $this->redirectToRoute("sortie_create");
+        }
 
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
@@ -64,21 +76,7 @@ class SortieController extends AbstractController
         }
         return $this->render("sortie/create.html.twig", [
             'sortieForm' => $sortieForm->createView(),
-            'lieuForm' => $lieu->createView()
+            'lieuForm' => $lieuForm->createView()
         ]);
     }
-
-    private function createLieuPopup(EntityManagerInterface $em, Request $request) {
-        $lieu = new Lieu();
-        $lieuForm = $this->createForm(LieuType::class, $lieu);
-        $lieuForm->handleRequest($request);
-
-        if($lieuForm->isSubmitted() && $lieuForm->isValid()) {
-            $em->persist($lieu);
-            $em->flush();
-            $this->addFlash('success','Le lieu a été ajouté');
-        }
-        return $lieuForm;
-    }
-
 }

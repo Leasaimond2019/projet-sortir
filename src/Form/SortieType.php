@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Sortie;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
