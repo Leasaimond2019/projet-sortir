@@ -60,6 +60,7 @@ class UserType extends AbstractType
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'Telephone',
+                'required'=>false,
                 'attr' => [
                     'placeholder' => "Votre numéro de téléphone"
                 ]

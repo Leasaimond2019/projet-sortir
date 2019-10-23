@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Création d'un utilisateur{% endblock %}
+
 {% block main %}
+    <h1>Création d'un utilisateur</h1>
     {{ form_start(registerForm) }}
     {{ form_widget(registerForm) }}
     <button type="submit" class="btn btn-primary">{{ "Enregistrer" |trans }}</button>
     {{ form_start(registerForm) }}
 {% endblock %}
 
-{% block title %}Inscription{% endblock %}
 
