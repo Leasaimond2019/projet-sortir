@@ -26,7 +26,10 @@ class SortieType extends AbstractType
                 'widget' => 'single_text'
             ])
             ->add('duree', IntegerType::class, [
-                'label' => 'Durée de la sortie (en minutes)'
+                'label' => 'Durée de la sortie',
+                'attr' => [
+                'step' => 5
+                ]
             ])
             ->add('date_cloture', DateTimeType::class, [
                 'label' => 'Date et heure limite d\'inscription',
@@ -52,8 +55,9 @@ class SortieType extends AbstractType
             ])
             ->add('no_site', EntityType::class, [
                 'class' => 'App\Entity\Site',
+                'disabled' => 'true',
                 'choice_label' => 'nom_site',
-                'placeholder' => 'Choisir un site',
+                'label' => 'Site organisateur',
                 'query_builder' => function(EntityRepository $er) {
                     return $er -> createQueryBuilder('s');
                 }
