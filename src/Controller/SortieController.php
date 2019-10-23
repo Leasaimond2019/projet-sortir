@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Lieu;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\User;
+use App\Form\LieuType;
 use App\Form\SiteType;
 use App\Form\SortieType;
 use App\Form\UserType;
@@ -40,6 +42,10 @@ class SortieController extends AbstractController
      * @throws \Exception
      */
     public function create(EntityManagerInterface $em, Request $request) {
+
+        // Lieu
+        $lieu = $this->createLieuPopup($em,$request);
+
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
@@ -49,18 +55,30 @@ class SortieController extends AbstractController
             $numEtat = $em->getRepository(Etat::class)->findOneBy(["libelle"=>"Créée"]);
             $sortie->setNoEtat($numEtat);
 
-            // TODO : modifier user à user connecté
             // ajout de l'user en cours
-            $numUser = $em->getRepository(User::class)->find(1);
-            $sortie->setNoOrganisateur($numUser);
+            $sortie->setNoOrganisateur($this->getUser());
             $em->persist($sortie);
             $em->flush();
             $this->addFlash('success', "La sortie a été créée");
             return $this->redirectToRoute("home");
         }
         return $this->render("sortie/create.html.twig", [
-            "sortieForm" => $sortieForm->createView()
+            'sortieForm' => $sortieForm->createView(),
+            'lieuForm' => $lieu->createView()
         ]);
+    }
+
+    private function createLieuPopup(EntityManagerInterface $em, Request $request) {
+        $lieu = new Lieu();
+        $lieuForm = $this->createForm(LieuType::class, $lieu);
+        $lieuForm->handleRequest($request);
+
+        if($lieuForm->isSubmitted() && $lieuForm->isValid()) {
+            $em->persist($lieu);
+            $em->flush();
+            $this->addFlash('success','Le lieu a été ajouté');
+        }
+        return $lieuForm;
     }
 
 }
