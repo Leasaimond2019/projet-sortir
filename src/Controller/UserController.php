@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\RegisterType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
@@ -63,5 +66,29 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/register", name="user_register")
+     */
+    public function register(EntityManagerInterface $em,
+                             Request $request,
+                             UserPasswordEncoderInterface $encoder)
+    {
+        $user = new User();
+        $registerForm = $this->createForm(RegisterType::class, $user);
+
+        $registerForm->handleRequest($request);
+        if ($registerForm->isSubmitted() && $registerForm->isValid()) {
+            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hash);
+            $em->persist($user);
+            $em->flush();
+            return $this->redirectToRoute("home");
+
+        }
+
+        return $this->render('user/register.html.twig', [
+            'registerForm' => $registerForm->createView()
+        ]);
+    }
 }
 
