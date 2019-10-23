@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+{% block title %}Créer une sortie | {{ parent() }}{% endblock %}
+
+{% block main %}
+    <h1>Créer une sortie</h1>
+    {# afficher un formulaire #}
+    {{ form_start(sortieForm, { 'attr' : { 'class': 'row' } }) }}
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ form_label(sortieForm.nom) }}
+            {{ form_errors(sortieForm.nom) }}
+            {{ form_widget(sortieForm.nom) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.date_debut) }}
+            {{ form_errors(sortieForm.date_debut) }}
+            {{ form_widget(sortieForm.date_debut) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.date_cloture) }}
+            {{ form_errors(sortieForm.date_cloture) }}
+            {{ form_widget(sortieForm.date_cloture) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.nb_inscription_max) }}
+            {{ form_errors(sortieForm.nb_inscription_max) }}
+            {{ form_widget(sortieForm.nb_inscription_max) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.duree) }}
+            {{ form_errors(sortieForm.duree) }}
+            <div class="form-inline">
+                {{ form_widget(sortieForm.duree) }}&nbsp;minutes
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            {{ form_label(sortieForm.description) }}
+            {{ form_errors(sortieForm.description) }}
+            {{ form_widget(sortieForm.description) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.url_photo) }}
+            {{ form_errors(sortieForm.url_photo) }}
+            {{ form_widget(sortieForm.url_photo) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.no_site) }}
+            {{ form_errors(sortieForm.no_site) }}
+            {{ form_widget(sortieForm.no_site) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(sortieForm.no_lieu) }}
+            {{ form_errors(sortieForm.no_lieu) }}
+            <div class="form-inline">
+                {{ form_widget(sortieForm.no_lieu) }}
+                <a href="{{ path("sortie_create") }}" data-toggle='modal' data-target='#creationLieu'>Ajouter</a>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Créer</button>
+    {{ form_end(sortieForm) }}
+    {{ include("inc/_popup_createLieu.html.twig", {'lieuForm': lieuForm}) }}
+
+{% endblock %}

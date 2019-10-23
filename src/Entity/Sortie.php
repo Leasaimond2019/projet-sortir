@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SortieRepository")
@@ -47,39 +50,43 @@ class Sortie
     private $description;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $etat_sortie;
-
-    /**
      * @ORM\Column(type="string", length=250, nullable=true)
      */
     private $url_photo;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $organisateur;
-    /**
-     * @var Etat
-     * @ORM\ManyToOne(targetEntity="App\Entity\Etat")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Etat", inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $no_etat;
+
     /**
-     * @var Lieu
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lieu")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lieu", inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $no_lieu;
+
     /**
-     * @var Site
-     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
-     */
-    private $no_site;
-    /**
-     * @var Participant
-     * @ORM\ManyToOne(targetEntity="App\Entity\Participant")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="sorties")
      */
     private $no_organisateur;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $no_site;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_sortie")
+     */
+    private $no_inscription;
+
+    public function __construct()
+    {
+        $this->no_inscription = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -182,80 +189,83 @@ class Sortie
         return $this;
     }
 
-    public function getOrganisateur(): ?int
+    public function getNoEtat(): ?Etat
     {
-        return $this->organisateur;
+        return $this->no_etat;
     }
 
-    public function setOrganisateur(int $organisateur): self
+    public function setNoEtat(?Etat $no_etat): self
     {
-        $this->organisateur = $organisateur;
+        $this->no_etat = $no_etat;
+
+        return $this;
+    }
+
+    public function getNoLieu(): ?Lieu
+    {
+        return $this->no_lieu;
+    }
+
+    public function setNoLieu(?Lieu $no_lieu): self
+    {
+        $this->no_lieu = $no_lieu;
+
+        return $this;
+    }
+
+    public function getNoOrganisateur(): ?User
+    {
+        return $this->no_organisateur;
+    }
+
+    public function setNoOrganisateur(?User $no_organisateur): self
+    {
+        $this->no_organisateur = $no_organisateur;
+
+        return $this;
+    }
+
+    public function getNoSite(): ?Site
+    {
+        return $this->no_site;
+    }
+
+    public function setNoSite(?Site $no_site): self
+    {
+        $this->no_site = $no_site;
 
         return $this;
     }
 
     /**
-     * @return Etat
+     * @return Collection|Inscription[]
      */
-    public function getNoEtat(): Etat
+    public function getNoInscription(): Collection
     {
-        return $this->no_etat;
+        return $this->no_inscription;
     }
 
-    /**
-     * @param Etat $no_etat
-     */
-    public function setNoEtat(Etat $no_etat): void
+    public function addNoInscription(Inscription $noInscription): self
     {
-        $this->no_etat = $no_etat;
+        if (!$this->no_inscription->contains($noInscription)) {
+            $this->no_inscription[] = $noInscription;
+            $noInscription->setNoSortie($this);
+        }
+
+        return $this;
     }
 
-    /**
-     * @return Lieu
-     */
-    public function getNoLieu(): Lieu
+    public function removeNoInscription(Inscription $noInscription): self
     {
-        return $this->no_lieu;
-    }
+        if ($this->no_inscription->contains($noInscription)) {
+            $this->no_inscription->removeElement($noInscription);
+            // set the owning side to null (unless already changed)
+            if ($noInscription->getNoSortie() === $this) {
+                $noInscription->setNoSortie(null);
+            }
+        }
 
-    /**
-     * @param Lieu $no_lieu
-     */
-    public function setNoLieu(Lieu $no_lieu): void
-    {
-        $this->no_lieu = $no_lieu;
-    }
-
-    /**
-     * @return Site
-     */
-    public function getNoSite(): Site
-    {
-        return $this->no_site;
-    }
-
-    /**
-     * @param Site $no_site
-     */
-    public function setNoSite(Site $no_site): void
-    {
-        $this->no_site = $no_site;
-    }
-
-    /**
-     * @return Participant
-     */
-    public function getNoOrganisateur(): Participant
-    {
-        return $this->no_organisateur;
-    }
-
-    /**
-     * @param Participant $no_organisateur
-     */
-    public function setNoOrganisateur(Participant $no_organisateur): void
-    {
-        $this->no_organisateur = $no_organisateur;
+        return $this;
     }
 
 }

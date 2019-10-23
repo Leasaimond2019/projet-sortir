@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+<table class="table">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Sites</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for site in sites %}
+        <tr>
+            <td>
+                {% if(id is defined and id==site.id) %}
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                    {{ form_start(siteForm) }}
+                                    {{ form_end(siteForm)  }}
+                                    <button type="submit" class="btn btn-primary">Valider</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{site.getNomSite()}}
+                {% else %}
+                    {{site.getNomSite()}}
+                {% endif %}
+            </td>
+            <td><a href="{{ path('manageID_site',{ 'id': site.id })}}" data-toggle='modal' data-target='#myModal'>Modifier</a>
+                -
+                <a href="{{ path('home') }}">Supprimer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
