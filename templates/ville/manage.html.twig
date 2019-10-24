@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+{% block main %}
+    <h1 style="text-align: center">Gérer les villes</h1>
+<table class="table" id="table">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Ville</th>
+        <th scope="col">Code Postal</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for site in sites %}
+        <tr>
+            <td>
+                {% if(id is defined and id==site.id) %}
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="myModal">Modification du site</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                    {{ form_start(siteForm) }}
+                                    {{ form_row(siteForm.nom_site) }}
+                                        <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
+                                    {{ form_end(siteForm)  }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            $('#myModal').modal('show')
+                        });
+                    </script>
+                    {{site.getNomSite()}}
+                {% else %}
+                    {{site.getNomSite()}}
+                {% endif %}
+            </td>
+            <td>
+                {{site.getNomVille()}}
+            </td>
+            <td><a href="{{ path('manageID_site',{ 'id': site.id })}}">Modifier</a>
+                -
+                <a href="{{ path('home') }}">Supprimer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td>
+        </td>
+        <td>
+            <a href="{{ path('home') }}">Ajouter</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+{% endblock %}
+
+{%  block javascripts %}
+    <script>
+$(document).ready( function () {
+    $('#table').DataTable();
+} );
+</script>
+{% endblock %}
