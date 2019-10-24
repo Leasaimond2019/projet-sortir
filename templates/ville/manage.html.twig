@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block main %}
     <h1 style="text-align: center">Gérer les villes</h1>
-<table class="table" id="table">
+    <a href="{{ path('add_city') }} " class="btn btn-primary"><i class="fas fa-plus-circle"></i> Ajouter</a>
+
+    <table class="table" id="table">
     <thead class="thead-dark">
     <tr>
         <th scope="col">Ville</th>
@@ -10,10 +12,10 @@
     </tr>
     </thead>
     <tbody>
-    {% for site in sites %}
+    {% for ville in villes %}
         <tr>
             <td>
-                {% if(id is defined and id==site.id) %}
+                {% if(id is defined and id==ville.id) %}
                     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -25,50 +27,80 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                    {{ form_start(siteForm) }}
-                                    {{ form_row(siteForm.nom_site) }}
+                                    {{ form_start(villeForm) }}
+                                    {{ form_row(villeForm.nom_ville)}}
+                                    {{ form_row(villeForm.code_postal)}}
                                         <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
-                                    {{ form_end(siteForm)  }}
+                                    {{ form_end(villeForm) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <script>
-                        $(document).ready(function () {
-                            $('#myModal').modal('show')
-                        });
-                    </script>
-                    {{site.getNomSite()}}
-                {% else %}
-                    {{site.getNomSite()}}
-                {% endif %}
-            </td>
+                    {{ville.getNomVille()}} </td>
             <td>
-                {{site.getNomVille()}}
+                {{ville.getCodePostal()}}
             </td>
-            <td><a href="{{ path('manageID_site',{ 'id': site.id })}}">Modifier</a>
-                -
-                <a href="{{ path('home') }}">Supprimer</a>
+                {% else %}
+                    {{ville.getNomVille()}}</td>
+                    <td>
+                        {{ville.getCodePostal()}}
+                    </td>
+                {% endif %}
+            <td> <div class="row">
+                    <a href="{{ path('manageID_city',{ 'id': ville.id })}}"><i class="fas fa-edit"></i></a>
+                    -
+                    <form method="post"
+                          action="{{ path("delete_city", {'id' : ville.id }) }}"
+                          onsubmit="return confirm('Confirmation de la suppression ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~ville.id) }}">
+                        <button class="btn btn-link fas fa-trash-alt"></button>
+                    </form>
+                </div>
             </td>
         </tr>
     {% endfor %}
-    <tr>
-        <td>
-        </td>
-        <td>
-            <a href="{{ path('home') }}">Ajouter</a>
-        </td>
-    </tr>
     </tbody>
 </table>
+    {% if cityFormulaire is defined  %}
+        <div class="modal fade" id="addCity" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCity">Ajout d'une ville</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
 
+                            {{ form_start(cityFormulaire) }}
+                            {{ form_row(cityFormulaire.nom_ville)}}
+                            {{ form_row(cityFormulaire.code_postal)}}
+                            <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
+                            {{ form_end(cityFormulaire)  }}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {%  block javascripts %}
     <script>
-$(document).ready( function () {
-    $('#table').DataTable();
-} );
+        $(document).ready( function () {
+            $('#table').DataTable({
+            language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                },
+                responsive: true,
+            });
+            $('#myModal').modal('show');
+            $('#addCity').modal('show');
+        } );
 </script>
 {% endblock %}

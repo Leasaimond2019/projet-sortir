@@ -61,18 +61,18 @@ class User implements UserInterface
     private $actif;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="no_organisateur")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="no_organisateur",cascade={"remove"})
      */
     private $sorties;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users" )
      * @ORM\JoinColumn(nullable=false)
      */
     private $no_site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_user",cascade={"remove"})
      */
     private $no_inscription;
 

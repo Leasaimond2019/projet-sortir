@@ -19,22 +19,23 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
-    // /**
-    //  * @return Site[] Returns an array of Site objects
-    //  */
-    /*
-    public function findByExampleField($value)
+//     /**
+//     * @return Site[] Returns an array of Site objects
+//      */
+
+    public function findUserAdminInSite($site)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT * FROM `site` inner JOIN user ON site.id = user.no_site_id WHERE user.roles LIKE "%ROLE_ADMIN%" AND site.id=:id;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $site->getId()]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Site

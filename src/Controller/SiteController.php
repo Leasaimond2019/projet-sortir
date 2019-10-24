@@ -11,15 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SiteController extends AbstractController
 {
-    /**
-     * @Route("/site", name="site")
-     */
-    public function index()
-    {
-        return $this->render('site/index.html.twig', [
-            'controller_name' => 'SiteController',
-        ]);
-    }
 
     /**
      * @Route("/manageSite", name="manage_site")
@@ -100,9 +91,15 @@ class SiteController extends AbstractController
         }
         if ($this->isCsrfTokenValid('delete'.$site->getId(),
             $request->request->get('_token'))) {
+            $siteRepo=$em->getRepository(Site::class);
+
+
+            if(count($siteRepo->findUserAdminInSite($site))>0 ){
+                $this->addFlash('echec', "Désolé");
+            }else{
             $em->remove($site);
             $em->flush();
-            $this->addFlash('success', "Le site a été supprimé");
+            $this->addFlash('success', "Le site a été supprimé");}
         }
         return $this->redirectToRoute("manage_site");
     }

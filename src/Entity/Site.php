@@ -24,7 +24,7 @@ class Site
     private $nom_site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="no_site")
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="no_site",cascade={"remove"})
      */
     private $users;
 
