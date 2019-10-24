@@ -80,6 +80,7 @@ class UserController extends AbstractController
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
+            $user->setActif(true);
             $em->persist($user);
             $em->flush();
             return $this->redirectToRoute("home");

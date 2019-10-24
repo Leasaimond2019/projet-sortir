@@ -78,7 +78,7 @@ class Sortie
     private $no_site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_sortie")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_sortie",cascade={"remove"})
      */
     private $no_inscription;
 

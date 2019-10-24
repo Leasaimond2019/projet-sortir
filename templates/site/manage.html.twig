@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block main %}
     <h1 style="text-align: center">Gérer les sites</h1>
-<table class="table" id="table">
+    <a href="{{ path('add_site') }} " class="btn btn-primary"><i class="fas fa-plus-circle"></i> Ajouter</a>
+    <table class="table" id="table">
     <thead class="thead-dark">
     <tr>
         <th scope="col">Sites</th>
@@ -50,18 +51,10 @@
                     <input type="hidden" name="_token" value="{{ csrf_token('delete'~site.id) }}">
                     <button class="btn btn-link fas fa-trash-alt"></button>
                 </form>
-{#                <a href="{{ path('delete_site',{ 'id': site.id }) }}">Supprimer</a>#}
                 </div>
             </td>
         </tr>
     {% endfor %}
-    <tr>
-        <td>
-        </td>
-        <td>
-            <a href="{{ path('add_site') }} "><i class="fas fa-plus-circle"></i></a>
-        </td>
-    </tr>
     </tbody>
 </table>
     {% if siteFormulaire is defined  %}
@@ -93,7 +86,12 @@
 {%  block javascripts %}
     <script>
 $(document).ready( function () {
-    $('#table').DataTable();
+    $('#table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+        },
+        responsive: true,
+    });
     $('#myModal').modal('show');
     $('#addSite').modal('show');
 } );

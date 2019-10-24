@@ -74,10 +74,6 @@ class RegisterType extends AbstractType
                     'placeholder' => "Email"
                 ]
             ])
-            ->add('actif', CheckboxType::class, [
-                'label' => 'Actif',
-                'required' => false,
-            ])
             ->add('no_site', EntityType::class, [
                 'class'=> 'App\Entity\Site',
                 'label'=> 'Site',
