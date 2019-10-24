@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la sortie | {{ parent() }}{% endblock %}
+
+{% block main %}
+    <h1>Détail</h1>
+    {# afficher les données de l'article #}
+    <h2>{{ sortie.getNom }}</h2>
+    <div class="text-right">
+        <p class="mb-0">Organisée par {{ sortie.getNoOrganisateur.getNom }}</p>
+        <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à h:i") }}</p>
+        <p>Site rattaché : {{ sortie.getNoSite.getNomSite }}</p>
+    </div>
+    <div class="embed-responsive embed-responsive-16by9">
+        <img class="embed-responsive-item" src="{{ sortie.getUrlPhoto }}" alt="Image de la sortie"
+             style="object-fit: cover">
+    </div>
+    <div id="infos" class="mt-3">
+        <h4>Description :</h4>
+        {{ sortie.getDescription | raw }}
+    </div>
+    <div id="lieu" class="row mt-3">
+        <div class="col-md-4">
+            <h4>Lieu de la sortie</h4>
+            <p>{{ sortie.getNoLieu.getNomLieu }}<br>
+                {{ sortie.getNoLieu.getRue }}<br>
+                {{ sortie.getNoLieu.getNoVille.getCodePostal }}</p>
+        </div>
+        <div class="col-md-8">
+            {{ sortie.getNoLieu.getLatitude | raw }}
+            {{ sortie.getNoLieu.getLongitude | raw }}
+            <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=-1.7641639709472658%2C47.17512840593484%2C-1.4774894714355469%2C47.27794793201665&amp;layer=mapnik&amp;marker={{ sortie.getNoLieu.getLatitude | raw }}%2C{{ sortie.getNoLieu.getLongitude | raw }}"
+                    style="border: 1px solid black"></iframe>
+            <br/><small><a href="https://www.openstreetmap.org/?mlat=47.2266&amp;mlon=-1.6208#map=13/47.2266/-1.6208">Afficher
+                    une carte plus grande</a></small>
+        </div>
+    </div>
+    <div id="inscription">
+        <h4>Inscription</h4>
+        <p>Date limite d'inscription : {{ sortie.getDateCloture|date("d/m/Y à h:i") }}</p>
+    </div>
+    <div class="">
+        {#            <a href="{{ path("sortie_edit", {'id' : sortie.id}) }}"#}
+        {#               class="btn btn-primary">Modifier</a>#}
+
+        <!-- TODO btn modifier, participer, se désister !-->
+        <form method="post"
+              action="{{ path("sortie_delete", {'id' : sortie.id }) }}"
+              onsubmit="return confirm('Confirmation de la suppression ?');">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+            <button class="btn btn-danger">Supprimer</button>
+        </form>
+    </div>
+{% endblock %}
+
+

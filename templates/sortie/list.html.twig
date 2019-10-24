@@ -2,9 +2,22 @@
 
 {% block title %}Liste des sorties{% endblock %}
 
-{% block body %}
+{% block main %}
     <h1>Liste des sorties</h1>
+    <div class="row">
     {% for sortie in sorties %}
-        {{sortie.nom}}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <img src="{{ sortie.getUrlPhoto() }}" class="card-img-top embed-responsive-item" style="object-fit: cover">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ sortie.getNom() }}</h5>
+                    <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>
+                    <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations" ><i class="fas fa-info-circle"></i></a>
+                </div>
+            </div>
+        </div>
     {% endfor %}
+    </div>
 {% endblock %}

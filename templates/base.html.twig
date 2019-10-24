@@ -6,12 +6,11 @@
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset("css/datatables.min.css") }}">
         <link rel="stylesheet" href="{{ asset("css/site.css") }}">
-        <link rel="stylesheet" href="{{ asset("css/fontawesome/css/all.css") }}">
+        <link rel="stylesheet" href="{{ asset("fontawesome/css/all.css") }}">
     {% endblock %}
 </head>
 <body>
-{% block body %}
-    <div class="container">
+    {% block body %}
         <header>
             {{ include("inc/_navbar.html.twig") }}
         </header>
@@ -25,17 +24,17 @@
                     {% endfor %}
                 {% endfor %}
             </div>
-            {% block main %}
-            {% endblock %}
+            <div class="container">
+                {% block main %}
+                {% endblock %}
+            </div>
         </main>
         <footer>
             &copy {{ "now" | date('Y') }}
         </footer>
-    </div>
-{% endblock %}
-<script src="{{ asset("js/datatables.min.js") }}"></script>
+    {% endblock %}
 {% block javascripts %}
-
+    <script src="{{ asset("js/datatables.min.js") }}"></script>
 {% endblock %}
 </body>
 </html>

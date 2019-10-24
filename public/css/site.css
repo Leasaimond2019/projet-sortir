@@ -1,3 +1,15 @@
+nav {
+    background: #72c697;
+}
+
+a{
+    color: black;
+}
+
+a:hover {
+    color: rgba(0, 0, 0, 0.72);
+}
+
 label.required:after {
     content: " *";
     color: red;

@@ -43,7 +43,8 @@ class SortieType extends AbstractType
                 'label' => 'Description'
             ])
             ->add('url_photo', TextType::class, [
-                'label' => 'Photo de présentation'
+                'label' => 'Photo de présentation',
+                'required' => false
             ])
             ->add('no_lieu', EntityType::class, [
                 'class' => 'App\Entity\Lieu',
@@ -52,17 +53,17 @@ class SortieType extends AbstractType
                 'placeholder' => 'Choisir un lieu',
                 'query_builder' => function(EntityRepository $er) {
                     return $er -> createQueryBuilder('l');
-                }
+                },
             ])
-            ->add('no_site', EntityType::class, [
-                'class' => 'App\Entity\Site',
-                'disabled' => 'true',
-                'choice_label' => 'nom_site',
-                'label' => 'Site organisateur',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er -> createQueryBuilder('s');
-                }
-            ])
+//            ->add('no_site', EntityType::class, [
+//                'class' => 'App\Entity\Site',
+//                'disabled' => 'true',
+//                'choice_label' => 'nom_site',
+//                'label' => 'Site organisateur',
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er -> createQueryBuilder('s');
+//                },
+//            ])
         ;
     }
 
