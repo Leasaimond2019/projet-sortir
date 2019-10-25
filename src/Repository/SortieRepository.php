@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
+
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,15 +23,15 @@ class SortieRepository extends ServiceEntityRepository
 
     public function findSortieByUser($id)
     {
-        $conn = $this->getEntityManager()->getConnection();
+         $test=$this->createQueryBuilder('s')
+            ->select('s')
+            ->innerJoin('s.no_organisateur', 'p', Join::WITH, 'p.id =:id')
+            ->setParameter('id', $id)
+            ->getQuery()
+             ->getResult()
+            ;
 
-        $sql = '
-        SELECT * FROM `sortie` inner JOIN user ON sortie.no_organisateur_id=user.id  WHERE user.id=:id;';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(['id' => $id]);
-
-        // returns an array of arrays (i.e. a raw data set)
-        return $stmt->fetchAll();
+         return $test;
     }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
