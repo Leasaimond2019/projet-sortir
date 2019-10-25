@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Inscription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Inscription|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,18 @@ class InscriptionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByUserAndSortie($user,$sortie)  {
+        $query=$this->createQueryBuilder('i')
+            ->select('i')
+            ->where('i.no_user = :idUser')
+            ->andWhere('i.no_sortie = :idSortie')
+            ->setParameter('idUser',$user->getId())
+            ->setParameter('idSortie',$sortie->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $query;
+    }
 }

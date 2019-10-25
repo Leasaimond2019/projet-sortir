@@ -85,20 +85,22 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="sortie_detail",
+     * @Route("/details/{id}", name="sortie_detail",
      *     requirements={"id"="\d+"}, methods={"POST","GET"})
      */
     public function detail($id, Request $request) {
         // récupérer la fiche article dans la base de données
         $sortieRepo=$this->getDoctrine()->getRepository(Sortie::class);
         $sortie=$sortieRepo->find($id);
+        $inscriptions = $sortie->getNoInscription();
 
         if ($sortie==null) {
             throw $this->createNotFoundException("Article inconnu");
         }
 
         return $this->render("sortie/detail.html.twig", [
-            "sortie"=>$sortie
+            "sortie"        =>  $sortie,
+            "inscriptions"  => $inscriptions
         ]);
     }
 
