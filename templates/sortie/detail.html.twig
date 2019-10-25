@@ -7,7 +7,7 @@
     {# afficher les données de l'article #}
     <h2>{{ sortie.getNom }}</h2>
     <div class="text-right">
-        <p class="mb-0">Organisée par {{ sortie.getNoOrganisateur.getNom }}</p>
+        <p class="mb-0">Organisée par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}" class="stretched-link" style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
         <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à h:i") }}</p>
         <p>Site rattaché : {{ sortie.getNoSite.getNomSite }}</p>
     </div>

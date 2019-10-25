@@ -3,18 +3,21 @@
 {% block title %}Liste des sorties{% endblock %}
 
 {% block main %}
-    <h1>Liste des sorties</h1>
+    {% if mesSorties is defined %}
+    <h1>Liste de mes sorties</h1>
+    {% else %}
+        <h1>Liste des sorties</h1>
+    {% endif %}
     <div class="row">
     {% for sortie in sorties %}
         <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="card">
-                {% if sortie.getUrlPhoto is defined %}
                 <div class="embed-responsive embed-responsive-16by9">
                     <img src="{{ sortie.getUrlPhoto() }}" class="card-img-top embed-responsive-item" style="object-fit: cover">
                 </div>
-                {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ sortie.getNom() }}</h5>
+                    <h5 class="card-title">{{ sortie.getNom() }} </h5>
+                    <p>proposé par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}" class="stretched-link" style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
                     <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>
                     <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations" ><i class="fas fa-info-circle"></i></a>
                 </div>

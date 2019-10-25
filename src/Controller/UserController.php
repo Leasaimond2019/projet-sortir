@@ -44,9 +44,9 @@ class UserController extends AbstractController
     }
 
     /**
-    * @Route("/monCompte/profil", name="account_profile")
-    */
-    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user) : Response
+     * @Route("/monCompte/profil", name="account_profile")
+     */
+    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user): Response
     {
         $user = $this->getUser();
 
@@ -61,8 +61,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/editProfil.html.twig', [
-            'form'=> $form->createView(),
-            'user'=>$user
+            'form' => $form->createView(),
+            'user' => $user
         ]);
     }
 
@@ -89,6 +89,25 @@ class UserController extends AbstractController
 
         return $this->render('user/register.html.twig', [
             'registerForm' => $registerForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/profil/{id}", name="user_detail",
+     *     requirements={"id"="\d+"}, methods={"POST","GET"})
+     */
+    public function detail($id, Request $request)
+    {
+        // récupérer la fiche article dans la base de données
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+
+        if ($user == null) {
+            throw $this->createNotFoundException("User inconnu");
+        }
+
+        return $this->render("user/detail.html.twig", [
+            "user" => $user
         ]);
     }
 }
