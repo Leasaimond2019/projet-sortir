@@ -24,8 +24,10 @@
             <div id="msgErreurs">
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
-                        <div class="alert alert-{{ label }}">
-                            <p>{{ message }}</p>
+                        <div class="alert alert-{{ label }} alert-dismissible fade show mt-3">
+                            <p class="m-0">{{ message }}</p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                         </div>
                     {% endfor %}
                 {% endfor %}
