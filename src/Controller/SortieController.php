@@ -128,9 +128,50 @@ class SortieController extends AbstractController
         $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sorties = $sortiesRepo->findSortieByUser($this->getUser()->getId());
 
+        if(count($sorties)>0){
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
             'mesSorties'=>true
+        ]);
+        }else {
+            return $this->render('sortie/list.html.twig', [
+                'mesSorties'=>true
+            ]);
+        }
+    }
+    /**
+     * @Route("/sortie/Cancel{id}", name="cancel_sortie")
+     */
+    public function cancelSortie($id, Request $request)
+    {
+        // récupérer la fiche article dans la base de données
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+
+        if ($sortie == null) {
+            throw $this->createNotFoundException("Sortie inconnu");
+        }
+
+        return $this->render("sortie/cancel.html.twig", [
+            "sortie" => $sortie
+        ]);
+    }
+
+    /**
+     * @Route("/sortie/Save{id}", name="save_sortie")
+     */
+    public function saveSortie($id, Request $request)
+    {
+        // récupérer la fiche article dans la base de données
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+
+        if ($sortie == null) {
+            throw $this->createNotFoundException("Sortie inconnu");
+        }
+
+        return $this->render("sortie/cancel.html.twig", [
+            "sortie" => $sortie
         ]);
     }
 }

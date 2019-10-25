@@ -9,6 +9,7 @@
         <h1>Liste des sorties</h1>
     {% endif %}
     <div class="row">
+        {% if sorties is defined %}
     {% for sortie in sorties %}
         <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="card">
@@ -20,9 +21,30 @@
                     <p>proposé par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}" class="stretched-link" style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
                     <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>
                     <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations" ><i class="fas fa-info-circle"></i></a>
+                    {% if mesSorties is defined %}
+                        <div class="row">
+                        <a href="{{ path('manageID_site',{ 'id': sortie.getId() })}}"><i class="fas fa-edit"></i></a>
+                            -
+                        <a href="{{ path('cancel_sortie',{ 'id': sortie.getId() })}}"><i class="fas fa-calendar-times"></i></a>
+                            -
+                        <form method="post"
+                              action="{{ path("sortie_delete", {'id' : sortie.getId() }) }}"
+                              onsubmit="return confirm('Confirmation de la suppression ?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.getId()) }}">
+                            <button class="btn btn-link fas fa-trash-alt"></button>
+                        </form>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     {% endfor %}
+            {% else %}
+                <div class="col-12">
+                <h3>Pas de sorties</h3>
+                <p> Vous n'avez pas créer de sorties. Pour en créer une cliquer sur le bouton "Ajouter"</p>
+                    <a href="{{ path("sortie_create")}}" class="btn btn-primary">Ajouter</a>
+        {% endif %}
     </div>
 {% endblock %}
