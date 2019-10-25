@@ -7,8 +7,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path("sortie_list") }}">Sorties</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sorties
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ path("sortie_list") }}">Liste des sorties</a>
+                        <a class="dropdown-item" href="{{ path("sortie_create") }}">Créer une sortie</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path("messorties_list") }}">Gérer mes sorties</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("account_profile") }}">Mon profil</a>
@@ -31,7 +39,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("app_login") }}">Se connecter</a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path("sortie_list") }}">Sorties</a>
+                </li>
             {% endif %}
         </ul>
     </div>

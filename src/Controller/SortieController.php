@@ -118,4 +118,20 @@ class SortieController extends AbstractController
         }
         return $this->redirectToRoute("sortie_list");
     }
+
+    /**
+     * @Route("/messorties", name="messorties_list")
+     */
+    public function mylist()
+    {
+        // récupérer les sorties depuis la base de données
+        $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sorties = $sortiesRepo->findSortieByUser($this->getUser()->getId());
+
+
+        return $this->render('sortie/list.html.twig', [
+            'sorties' => $sorties,
+            'mesSorties'=>true
+        ]);
+    }
 }

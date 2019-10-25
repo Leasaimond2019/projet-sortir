@@ -8,9 +8,11 @@
     {% for sortie in sorties %}
         <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="card">
+                {% if sortie.getUrlPhoto is defined %}
                 <div class="embed-responsive embed-responsive-16by9">
                     <img src="{{ sortie.getUrlPhoto() }}" class="card-img-top embed-responsive-item" style="object-fit: cover">
                 </div>
+                {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ sortie.getNom() }}</h5>
                     <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>

@@ -19,6 +19,18 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
+    public function findSortieByUser($id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT * FROM `sortie` inner JOIN user ON sortie.no_organisateur_id=user.id  WHERE user.id=:id;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
     //  */
