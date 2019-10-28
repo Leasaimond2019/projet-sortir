@@ -81,6 +81,10 @@ class Sortie
      * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_sortie",cascade={"remove"})
      */
     private $no_inscription;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $motif;
 
     public function __construct()
     {
@@ -266,6 +270,22 @@ class Sortie
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMotif()
+    {
+        return $this->motif;
+    }
+
+    /**
+     * @param mixed $motif
+     */
+    public function setMotif($motif): void
+    {
+        $this->motif = $motif;
     }
 
 }

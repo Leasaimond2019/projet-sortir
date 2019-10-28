@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler la sortie | {{ parent() }}{% endblock %}
+
+{% block main %}
+
+    <div class="container" xmlns="http://www.w3.org/1999/html">
+        <h1 align="center">Annuler une sortie</h1>
+        <p>Nom de la sortie : {{ sortie.getNom() }}</p>
+        <p>Date de la sortie :  {{ sortie.getDateDebut|date("d/m/Y à h:i") }}</p>
+        <p>Ville organisatrice : {{ sortie.getNoSite().getNomSite() }}</p>
+        <p>Lieu : {{ sortie.getNoLieu().getNomLieu() }}</p>
+        <form method="post" action="{{ path('save_sortie',{ 'id': sortie.getId() })}}">
+        <div class="form-group">
+            <label for="motif">Motif :</label>
+            <textarea name="motif" class="form-control" id="motif" rows="3"></textarea>
+        </div>
+
+
+    <input type="submit" class="btn btn-primary float-right" value="Enregistrer">
+    <button type=""  style="" class="btn btn-primary float-right" onclick="window.history.go(-1)" >Retour</button>
+    </form>
+    </div>
+{% endblock %}

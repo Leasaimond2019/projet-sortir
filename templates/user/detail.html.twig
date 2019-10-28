@@ -13,28 +13,6 @@
         <p>Email : {{ user.getMail() }}</p>
         <p >Ville de rattachement : {{ user.getNoSite().getNomSite }}</p>
 
-
-
-        {#        <img class="img" src="{{ article.photo }}" alt="image">#}
-{#        <h2>catégorie {{ article.categorie ? article.categorie.libelle : 'inconnue' }}</h2>#}
-{#        <p class="small">Ecrit le {{ article.dateCreation | date('d/m/Y H:i') }}</p>#}
-{#        <p class="small">Vu {{ article.vues }} fois</p>#}
-{#        <p>{{ article.description | raw }}</p>#}
-{#        <div class="row">#}
-{#            <h3>{{ (article.commentaires.count == 0) ? 'Aucun commentaire'#}
-{#                : article.commentaires.count~' Commentaires'}}</h3>#}
-{#            <ul class="list-group">#}
-{#                {% for commentaire in article.commentaires %}#}
-{#                    <li class="list-group-item">#}
-{#                        <p class="text-primary">#}
-{#                            {{ commentaire.dateCreation|date('d/m/Y H:i') }}#}
-{#                            - Auteur : {{ commentaire.auteur }}#}
-{#                        </p>#}
-{#                        <p>{{ commentaire.contenu | raw }}</p>#}
-{#                    </li>#}
-{#                {% endfor %}#}
-{#            </ul>#}
-{#        </div>#}
     </div>
     <button type=""  style="" class="btn btn-outline-dark float-right" onclick="window.history.go(-1)" >Retour</button>
 {% endblock %}
