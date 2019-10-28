@@ -95,21 +95,15 @@ class SortieController extends AbstractController
         // récupérer la fiche article dans la base de données
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
-        dump($sortie->getDateDebut());
-        $dateheureFinSortie = $sortie->getDateDebut();
-        $dateheureFinSortie->add(new \DateInterval('PT'.$sortie->getDuree().'M'));
+        $dateDebut = clone $sortie->getDateDebut();
+        $dateheureFinSortie = $dateDebut->add(new \DateInterval('PT'.$sortie->getDuree().'M'));
         $dateCourante = new \DateTime("now") ;
-
-//        dump($sortie->getDateDebut());
-//        dump($sortie->getDateDebut()< $dateCourante);
-//        dump($dateCourante < $dateheureFinSortie);
-//        dump($sortie->getNoEtat()->getLibelle() != "Annulée");
-//        die();
+        $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
         // update de l'état de la sortie
         if($dateCourante > $dateheureFinSortie && $sortie->getNoEtat()->getLibelle() != "Annulée") {
-            $sortie->setNoEtat($this->getDoctrine()->getRepository(Etat::class)->findOneBy(["libelle"=>"Passée"]));
+            $sortie->setNoEtat($etatRepo->findOneBy(["libelle"=>"Passée"]));
         } elseif ($sortie->getDateDebut() < $dateCourante && $dateCourante < $dateheureFinSortie && $sortie->getNoEtat()->getLibelle() != "Annulée") {
-            $sortie->setNoEtat($this->getDoctrine()->getRepository(Etat::class)->findOneBy(["libelle"=>"En cours"]));
+            $sortie->setNoEtat($etatRepo->findOneBy(["libelle"=>"Activité en cours"]));
         }
         // inscriptions de la sortie
         $inscriptions = $sortie->getNoInscription();

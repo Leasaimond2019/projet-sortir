@@ -17,7 +17,7 @@
         <div class="alert alert-warning">Cette sortie a été annulée</div>
     {% elseif(sortie.getNoEtat.getLibelle == "Passée")  %}
         <div class="alert alert-warning">Cette sortie est passée</div>
-        {% elseif(sortie.getNoEtat.getLibelle == "En cours") %}
+    {% elseif(sortie.getNoEtat.getLibelle == "Activité en cours") %}
         <div class="alert alert-warning">Cette sortie est en cours</div>
     {% endif %}
     <div class="embed-responsive embed-responsive-16by9">

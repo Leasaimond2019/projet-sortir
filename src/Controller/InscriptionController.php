@@ -34,7 +34,7 @@ class InscriptionController extends AbstractController
                 $this->addFlash("danger","La sortie n'a plus de places disponibles");
             } else if(!empty($userExistePourSortie)) {
                 $this->addFlash("danger", "Vous participez déjà à cette sortie");
-            } else if($sortie->getDateCloture() > new \DateTime('now')) {
+            } else if(new \DateTime('now') > $sortie->getDateCloture() ) {
                 $this->addFlash("danger", "La date limite d'inscription à cette sortie est dépassée");
             } else {
                 $sortie->addNoInscription($inscription);
@@ -43,7 +43,7 @@ class InscriptionController extends AbstractController
                 $em->persist($inscription);
                 $inscriptionsDansSortie = $sortie->getNoInscription();
                 // si la sortie est complète
-                if($inscriptionsDansSortie == $sortie->getNbInscriptionMax())
+                if(count($inscriptionsDansSortie) == $sortie->getNbInscriptionMax())
                     $sortie->setNoEtat($em->getRepository(Etat::class)->findOneBy(["libelle"=>"Clôturée"]));
                 $em->flush();
             }
