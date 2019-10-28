@@ -4,7 +4,7 @@
 
 {% block main %}
     <h1 style="text-align: center">Gérer les villes</h1>
-    <a href="{{ path('add_city') }} " class="btn btn-primary"><i class="fas fa-plus-circle"></i> Ajouter</a>
+    <a href="{{ path('add_city') }} " class="btn btn-outline-dark"><i class="fas fa-plus-circle"></i> Ajouter</a>
 
     <table class="table" id="table">
         <thead class="thead-dark">
@@ -33,7 +33,7 @@
                                         {{ form_start(villeForm) }}
                                         {{ form_row(villeForm.nom_ville)}}
                                         {{ form_row(villeForm.code_postal)}}
-                                        <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
+                                        <button type="submit" style="" class="btn btn-outline-dark float-right">Valider</button>
                                         {{ form_end(villeForm) }}
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
                             {{ form_start(cityFormulaire) }}
                             {{ form_row(cityFormulaire.nom_ville)}}
                             {{ form_row(cityFormulaire.code_postal)}}
-                            <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
+                            <button type="submit" style="" class="btn btn-outline-dark float-right">Valider</button>
                             {{ form_end(cityFormulaire)  }}
 
                         </div>
