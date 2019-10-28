@@ -58,7 +58,7 @@ class Etat
         return $this->sorties;
     }
 
-    public function addSorty(Sortie $sorty): self
+    public function addSortie(Sortie $sorty): self
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties[] = $sorty;
@@ -68,7 +68,7 @@ class Etat
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): self
+    public function removeSortie(Sortie $sorty): self
     {
         if ($this->sorties->contains($sorty)) {
             $this->sorties->removeElement($sorty);

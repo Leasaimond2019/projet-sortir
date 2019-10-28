@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Site;
 use App\Entity\Sortie;
@@ -28,9 +29,8 @@ class InscriptionController extends AbstractController
         public function sinscrire(Request $request, EntityManagerInterface $em, $id) {
             $inscription = new Inscription();
             $sortie = $em->getRepository(Sortie::class)->find($id);
-            $inscriptionsDansSortie = $sortie->getNoInscription();
             $userExistePourSortie = $em->getRepository(Inscription::class)->findByUserAndSortie($this->getUser(),$sortie);
-            if(count($inscriptionsDansSortie) == $sortie->getNbInscriptionMax()) {
+            if($sortie->getNoEtat()->getLibelle() == "Clôturée") {
                 $this->addFlash("danger","La sortie n'a plus de places disponibles");
             } else if(!empty($userExistePourSortie)) {
                 $this->addFlash("danger", "Vous participez déjà à cette sortie");
@@ -41,6 +41,10 @@ class InscriptionController extends AbstractController
                 $this->getUser()->addNoInscription($inscription);
                 $inscription->setDateInscription(new \DateTime('now'));
                 $em->persist($inscription);
+                $inscriptionsDansSortie = $sortie->getNoInscription();
+                // si la sortie est complète
+                if($inscriptionsDansSortie == $sortie->getNbInscriptionMax())
+                    $sortie->setNoEtat($em->getRepository(Etat::class)->findOneBy(["libelle"=>"Clôturée"]));
                 $em->flush();
             }
         return $this->redirectToRoute('sortie_detail', [

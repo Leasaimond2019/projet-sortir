@@ -45,10 +45,8 @@
                     {{ville.getCodePostal()}}
                 </td>
                 {% else %}
-                    {{ville.getNomVille()}}</td>
-                    <td>
-                        {{ville.getCodePostal()}}
-                    </td>
+                    <td>{{ville.getNomVille()}}</td>
+                    <td>{{ville.getCodePostal()}}</td>
                 {% endif %}
                 <td> <div class="row">
                         <a href="{{ path('manageID_city',{ 'id': ville.id })}}"><i class="fas fa-edit"></i></a>

@@ -13,6 +13,13 @@
         <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à h:i") }}</p>
         <p>Site rattaché : {{ sortie.getNoSite.getNomSite }}</p>
     </div>
+    {% if(sortie.getNoEtat.getLibelle == "Annulée") %}
+        <div class="alert alert-warning">Cette sortie a été annulée</div>
+    {% elseif(sortie.getNoEtat.getLibelle == "Passée")  %}
+        <div class="alert alert-warning">Cette sortie est passée</div>
+        {% elseif(sortie.getNoEtat.getLibelle == "En cours") %}
+        <div class="alert alert-warning">Cette sortie est en cours</div>
+    {% endif %}
     <div class="embed-responsive embed-responsive-16by9">
         <img class="embed-responsive-item" src="{{ sortie.getUrlPhoto }}" alt="Image de la sortie"
              style="object-fit: cover">
