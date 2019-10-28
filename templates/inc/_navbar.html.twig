@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="{{ path("home") }}">Sortir.com</a>
+    <a class="navbar-brand" href="{{ path("sortie_list") }}">Sortir.com</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,7 +12,6 @@
                         Sorties
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ path("sortie_list") }}">Liste des sorties</a>
                         <a class="dropdown-item" href="{{ path("sortie_create") }}">Créer une sortie</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ path("messorties_list") }}">Gérer mes sorties</a>

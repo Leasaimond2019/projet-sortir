@@ -152,6 +152,7 @@ class SortieController extends AbstractController
         $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sorties = $sortiesRepo->findSortieByUser($this->getUser()->getId());
 
+
         if (count($sorties) > 0) {
             return $this->render('sortie/list.html.twig', [
                 'sorties' => $sorties,
