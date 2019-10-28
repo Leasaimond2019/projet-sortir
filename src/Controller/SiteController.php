@@ -95,7 +95,7 @@ class SiteController extends AbstractController
 
 
             if(count($siteRepo->findUserAdminInSite($site))>0 ){
-                $this->addFlash('echec', "Désolé");
+                $this->addFlash('danger', "Le site est lié à un administrateur et ne peut pas être supprimé.");
             }else{
             $em->remove($site);
             $em->flush();

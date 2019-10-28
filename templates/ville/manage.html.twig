@@ -4,22 +4,23 @@
 
 {% block main %}
     <h1 style="text-align: center">Gérer les villes</h1>
-    <a href="{{ path('add_city') }} " class="btn btn-primary"><i class="fas fa-plus-circle"></i> Ajouter</a>
+    <a href="{{ path('add_city') }} " class="btn btn-outline-dark"><i class="fas fa-plus-circle"></i> Ajouter</a>
 
     <table class="table" id="table">
-    <thead class="thead-dark">
-    <tr>
-        <th scope="col">Ville</th>
-        <th scope="col">Code Postal</th>
-        <th scope="col">Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for ville in villes %}
+        <thead class="thead-dark">
         <tr>
-            <td>
-                {% if(id is defined and id==ville.id) %}
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <th scope="col">Ville</th>
+            <th scope="col">Code Postal</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ville in villes %}
+            <tr>
+                <td>
+                    {% if(id is defined and id==ville.id) %}
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -30,44 +31,48 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                    {{ form_start(villeForm) }}
-                                    {{ form_row(villeForm.nom_ville)}}
-                                    {{ form_row(villeForm.code_postal)}}
-                                        <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
-                                    {{ form_end(villeForm) }}
+                                        {{ form_start(villeForm) }}
+                                        {{ form_row(villeForm.nom_ville) }}
+                                        {{ form_row(villeForm.code_postal) }}
+                                        <button type="submit" style="" class="btn btn-outline-dark float-right">
+                                            Valider
+                                        </button>
+                                        {{ form_end(villeForm) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {{ville.getNomVille()}} </td>
-            <td>
-                {{ville.getCodePostal()}}
-            </td>
+                    {{ ville.getNomVille() }} </td>
+                <td>
+                    {{ ville.getCodePostal() }}
+                </td>
                 {% else %}
-                    {{ville.getNomVille()}}</td>
+                    {{ ville.getNomVille() }}</td>
                     <td>
-                        {{ville.getCodePostal()}}
+                        {{ ville.getCodePostal() }}
                     </td>
                 {% endif %}
-            <td> <div class="row">
-                    <a href="{{ path('manageID_city',{ 'id': ville.id })}}"><i class="fas fa-edit"></i></a>
-                    -
-                    <form method="post"
-                          action="{{ path("delete_city", {'id' : ville.id }) }}"
-                          onsubmit="return confirm('Confirmation de la suppression ?');">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~ville.id) }}">
-                        <button class="btn btn-link fas fa-trash-alt"></button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-    {% if cityFormulaire is defined  %}
-        <div class="modal fade" id="addCity" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <td>
+                    <div class="row">
+                        <a href="{{ path('manageID_city',{ 'id': ville.id }) }}"><i class="fas fa-edit"></i></a>
+                        -
+                        <form method="post"
+                              action="{{ path("delete_city", {'id' : ville.id }) }}"
+                              onsubmit="return confirm('Confirmation de la suppression ?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~ville.id) }}">
+                            <button class="btn btn-link fas fa-trash-alt"></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if cityFormulaire is defined %}
+        <div class="modal fade" id="addCity" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -80,10 +85,10 @@
                         <div class="form-group">
 
                             {{ form_start(cityFormulaire) }}
-                            {{ form_row(cityFormulaire.nom_ville)}}
-                            {{ form_row(cityFormulaire.code_postal)}}
-                            <button type="submit" style="" class="btn btn-primary float-right">Valider</button>
-                            {{ form_end(cityFormulaire)  }}
+                            {{ form_row(cityFormulaire.nom_ville) }}
+                            {{ form_row(cityFormulaire.code_postal) }}
+                            <button type="submit" style="" class="btn btn-outline-dark float-right">Valider</button>
+                            {{ form_end(cityFormulaire) }}
 
                         </div>
                     </div>
@@ -91,19 +96,17 @@
             </div>
         </div>
     {% endif %}
-{% endblock %}
-
-{%  block javascripts %}
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $('#table').DataTable({
-            language: {
+                language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
                 },
                 responsive: true,
             });
             $('#myModal').modal('show');
             $('#addCity').modal('show');
-        } );
-</script>
+        });
+    </script>
 {% endblock %}
+

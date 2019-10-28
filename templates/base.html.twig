@@ -41,9 +41,8 @@
             &copy {{ "now" | date('Y') }}
         </footer>
     {% endblock %}
-{% block javascripts %}
-
-    <script src="{{ asset("js/datatables.min.js") }}"></script>
-{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset("js/datatables.min.js") }}"></script>
+    {% endblock %}
 </body>
 </html>

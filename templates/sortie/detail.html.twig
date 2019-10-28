@@ -7,7 +7,9 @@
     {# afficher les données de l'article #}
     <h2>{{ sortie.getNom }}</h2>
     <div class="text-right">
-        <p class="mb-0">Organisée par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}" class="stretched-link" style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
+        <p class="mb-0">Organisée par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}"
+                                         class="stretched-link"
+                                         style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
         <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à h:i") }}</p>
         <p>Site rattaché : {{ sortie.getNoSite.getNomSite }}</p>
     </div>
@@ -34,7 +36,22 @@
         <div class="col-md-8 col-sm-12">
             <h4>Inscription</h4>
             <p>Date limite d'inscription : {{ sortie.getDateCloture|date("d/m/Y à H:i") }}</p>
-            <a href="{{ path("inscription_create", {'id' : sortie.id})  }}" class="btn btn-primary">S'inscrire</a>
+            {% if ouvert %}
+                {% if(inscriptionId is null) %}
+                    <a href="{{ path("inscription_create", {'id' : sortie.id}) }}"
+                       class="btn btn-outline-dark ">S'inscrire</a>
+                {% else %}
+                    <form method="post"
+                          action="{{ path("delete_inscription", {'id' : inscriptionId }) }}"
+                          onsubmit="return confirm('Voulez-vous vraiment vous désister ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~inscriptionId) }}">
+                        <button class="btn btn-outline-dark">Se désister</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <p class="alert alert-warning">Les inscriptions sont clôturées</p>
+            {% endif %}
         </div>
         <div class="col-md-4 col-sm-12">
             <table class="table">
@@ -59,7 +76,7 @@
     </div>
     <div class="">
         {#            <a href="{{ path("sortie_edit", {'id' : sortie.id}) }}"#}
-        {#               class="btn btn-primary">Modifier</a>#}
+        {#               class="btn btn-outline-dark">Modifier</a>#}
 
         <!-- TODO btn modifier, participer, se désister !-->
         <form method="post"
@@ -76,6 +93,7 @@
         var lat = {{ sortie.getNoLieu.getLatitude | raw }};
         var lon = {{ sortie.getNoLieu.getLongitude | raw }};
         var macarte = null;
+
         // Fonction d'initialisation de la carte
         function initMap() {
             // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
@@ -83,13 +101,14 @@
             // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer. Ici, openstreetmap.fr
             L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
                 // Il est toujours bien de laisser le lien vers la source des données
-                attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
+                attribution: 'propulsé par © <a href="//osm.org/copyright">OpenStreetMap</a>',
                 minZoom: 1,
                 maxZoom: 20
             }).addTo(macarte);
             var marker = L.marker([lat, lon]).addTo(macarte);
         }
-        window.onload = function(){
+
+        window.onload = function () {
             // Fonction d'initialisation qui s'exécute lorsque le DOM est chargé
             initMap();
         };

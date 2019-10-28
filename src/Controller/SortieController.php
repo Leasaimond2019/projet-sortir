@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Inscription;
 use App\Entity\Lieu;
 use App\Entity\Site;
 use App\Entity\Sortie;
@@ -98,9 +99,27 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException("Article inconnu");
         }
 
+        $inscriptionOuvertes = true;
+
+        if(count($inscriptions) > $sortie->getNbInscriptionMax()
+            || $sortie->getDateCloture() < new \DateTime('now')){
+            $inscriptionOuvertes = false;
+        }
+        $userInscrit = false;
+        $noInscription = $this->getDoctrine()->getRepository(Inscription::class);
+        $noInscription = $noInscription->findByUserAndSortie($this->getUser(),$sortie);
+        if(!empty($noInscription)) {
+            $userInscrit = true;
+            $inscriptionId = $noInscription[0]->getId();
+        } else {
+            $inscriptionId = null;
+        }
+
         return $this->render("sortie/detail.html.twig", [
             "sortie"        =>  $sortie,
-            "inscriptions"  => $inscriptions
+            "inscriptions"  => $inscriptions,
+            "ouvert" => $inscriptionOuvertes,
+            "inscriptionId" => $inscriptionId
         ]);
     }
 

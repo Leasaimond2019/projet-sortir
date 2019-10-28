@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Inscription;
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,7 +43,25 @@ class InscriptionController extends AbstractController
                 $em->persist($inscription);
                 $em->flush();
             }
-        return $this->redirectToRoute('sortie_detail', ['id'=>$sortie->getId()]);
+        return $this->redirectToRoute('sortie_detail', [
+            'id'=>$sortie->getId()]
+        );
+    }
+
+    /**
+     * @Route("/inscription/sedesister/{id}", name="delete_inscription")
+     */
+    public function delete(Request $request, EntityManagerInterface $em, $id) {
+        $inscription = $em->getRepository(Inscription::class)->find($id);
+        if ($inscription == null) {
+            throw $this->createNotFoundException('Inscription inconnue ou déjà annulée');
+        }
+        if ($this->isCsrfTokenValid('delete'.$inscription->getId(),
+            $request->request->get('_token'))) {
+            $em->remove($inscription);
+            $em->flush();
+            $this->addFlash('success', "Vous avez été désinscrit de cette sortie");}
+        return $this->redirectToRoute("sortie_list");
     }
 }
 
