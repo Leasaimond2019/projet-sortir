@@ -43,17 +43,18 @@ class SortieController extends AbstractController
      * @Route("/sortie/create",name="sortie_create")
      * @throws \Exception
      */
-    public function create(EntityManagerInterface $em, Request $request) {
+    public function create(EntityManagerInterface $em, Request $request)
+    {
 
         // Pour l'ajout d'un nouveau lieu
         $lieu = new Lieu();
         $lieuForm = $this->createForm(LieuType::class, $lieu);
         $lieuForm->handleRequest($request);
 
-        if($lieuForm->isSubmitted() && $lieuForm->isValid()) {
+        if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
             $em->persist($lieu);
             $em->flush();
-            $this->addFlash('success','Le lieu a été ajouté');
+            $this->addFlash('success', 'Le lieu a été ajouté');
             return $this->redirectToRoute("sortie_create");
         }
 
@@ -62,16 +63,16 @@ class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
-        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             // on met l'état de la sortie à "créée"
-            $numEtat = $em->getRepository(Etat::class)->findOneBy(["libelle"=>"Créée"]);
+            $numEtat = $em->getRepository(Etat::class)->findOneBy(["libelle" => "Créée"]);
             $sortie->setNoEtat($numEtat);
             $sortie->setNoSite($this->getUser()->getNoSite());
 
             // ajout de l'user en cours
             $sortie->setNoOrganisateur($this->getUser());
             $em->persist($sortie);
-            $sortie->getUrlPhoto() == null ? $sortie->setUrlPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png"):"";
+            $sortie->getUrlPhoto() == null ? $sortie->setUrlPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png") : "";
             $em->flush();
             $this->addFlash('success', "La sortie a été créée");
             return $this->redirectToRoute("sortie_list");
@@ -88,31 +89,33 @@ class SortieController extends AbstractController
      * @Route("/details/{id}", name="sortie_detail",
      *     requirements={"id"="\d+"}, methods={"POST","GET"})
      */
-    public function detail($id, Request $request) {
+    public function detail($id, Request $request)
+    {
         // récupérer la fiche article dans la base de données
-        $sortieRepo=$this->getDoctrine()->getRepository(Sortie::class);
-        $sortie=$sortieRepo->find($id);
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
         $inscriptions = $sortie->getNoInscription();
 
-        if ($sortie==null) {
+        if ($sortie == null) {
             throw $this->createNotFoundException("Article inconnu");
         }
 
         return $this->render("sortie/detail.html.twig", [
-            "sortie"        =>  $sortie,
-            "inscriptions"  => $inscriptions
+            "sortie" => $sortie,
+            "inscriptions" => $inscriptions
         ]);
     }
 
     /**
      * @Route("/{id}", name="sortie_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, EntityManagerInterface $em, $id) {
+    public function delete(Request $request, EntityManagerInterface $em, $id)
+    {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         if ($sortie == null) {
             throw $this->createNotFoundException('Sortie inconnue ou déjà supprimée');
         }
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(),
+        if ($this->isCsrfTokenValid('delete' . $sortie->getId(),
             $request->request->get('_token'))) {
             $em->remove($sortie);
             $em->flush();
@@ -130,17 +133,18 @@ class SortieController extends AbstractController
         $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sorties = $sortiesRepo->findSortieByUser($this->getUser()->getId());
 
-        if(count($sorties)>0){
-        return $this->render('sortie/list.html.twig', [
-            'sorties' => $sorties,
-            'mesSorties'=>true
-        ]);
-        }else {
+        if (count($sorties) > 0) {
             return $this->render('sortie/list.html.twig', [
-                'mesSorties'=>true
+                'sorties' => $sorties,
+                'mesSorties' => true
+            ]);
+        } else {
+            return $this->render('sortie/list.html.twig', [
+                'mesSorties' => true
             ]);
         }
     }
+
     /**
      * @Route("/sortie/Cancel{id}", name="cancel_sortie")
      */
@@ -162,16 +166,23 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie/Save{id}", name="save_sortie")
      */
-    public function saveSortie($id, Request $request)
+    public function saveSortie($id, Request $request, EntityManagerInterface $em)
     {
-        // récupérer la fiche article dans la base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
-        $sortie = $sortieRepo->find($id);
-
+        $sortie = $em->getRepository(Sortie::class)->find($id);
         if ($sortie == null) {
-            throw $this->createNotFoundException("Sortie inconnu");
+            throw $this->createNotFoundException('Sortie inconnu');
         }
 
+        if ($request->request->get('motif')) {
+            $numEtat = $em->getRepository(Etat::class)->findOneBy(["libelle" => "Annulée"]);
+            $sortie->setMotif($request->request->get('motif'));
+            $sortie->setNoEtat($numEtat);
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', "La sortie a été modifié");
+            return $this->redirectToRoute("sortie_detail",
+                ['id' => $sortie->getId()]);
+        }
         return $this->render("sortie/cancel.html.twig", [
             "sortie" => $sortie
         ]);

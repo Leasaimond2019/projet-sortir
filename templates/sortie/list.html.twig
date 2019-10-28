@@ -19,9 +19,13 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ sortie.getNom() }} </h5>
                     <p>proposé par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}" class="stretched-link" style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
+                    {% if sortie.getNoEtat().getLibelle()!="Annulée" %}
                     <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>
+                        {% else %}
+                            <p class="card-text" style="color: white;background: #ff5f33;text-align: center" >Annulé</p>
+                    {% endif %}
                     <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations" ><i class="fas fa-info-circle"></i></a>
-                    {% if mesSorties is defined %}
+                    {% if sortie.getNoOrganisateur().getId()==app.user.id %}
                         <div class="row">
                         <a href="{{ path('manageID_site',{ 'id': sortie.getId() })}}"><i class="fas fa-edit"></i></a>
                             -
