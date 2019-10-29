@@ -11,47 +11,51 @@
     <div class="row">
     {% if sorties is defined %}
     {% for sortie in sorties %}
-        {% if date(sortie.getDateDebut) > date('-31days') %}
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <div class="card">
-                <div class="embed-responsive embed-responsive-16by9">
-                    <img src="{{ sortie.getUrlPhoto() }}" class="card-img-top embed-responsive-item"
-                         style="object-fit: cover">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ sortie.getNom() }} </h5>
-                    <p>proposé par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}"
-                                      class="stretched-link"
-                                      style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
-                    {% if sortie.getNoEtat().getLibelle()!="Annulée" %}
-                        <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>
-                    {% else %}
-                        <p class="card-text" style="color: white;background: #ff5f33;text-align: center">Annulé</p>
-                    {% endif %}
-                    <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations"><i
-                                class="fas fa-info-circle"></i></a>
-                    {% if sortie.getNoOrganisateur().getId()==app.user.id %}
-                        <div class="row">
-                            <a href="{{ path('manageID_site',{ 'id': sortie.getId() }) }}"><i
-                                        class="fas fa-edit"></i></a>
-                            -
-                            {% if sortie.getNoEtat().getLibelle()=="Créée" or  sortie.getNoEtat().getLibelle()=="Ouverte" or sortie.getNoEtat().getLibelle()=="Clôturée" %}
-                                <a href="{{ path('cancel_sortie',{ 'id': sortie.getId() }) }}"><i
-                                            class="fas fa-calendar-times"></i></a>
-                                -
-                            {% endif %}
-                            <form method="post"
-                                  action="{{ path("sortie_delete", {'id' : sortie.getId() }) }}"
-                                  onsubmit="return confirm('Confirmation de la suppression ?');">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.getId()) }}">
-                                <button class="btn btn-link fas fa-trash-alt"></button>
-                            </form>
+        {% if sortie.getNoEtat().getLibelle()!="Archivée" %}
+            <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations">
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="card" >
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <img src="{{ sortie.getUrlPhoto() }}" class="card-img-top embed-responsive-item"
+                                 style="object-fit: cover" >
                         </div>
-                    {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ sortie.getNom() }} </h5>
+                            <p>proposé par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}"
+                                              class="stretched-link"
+                                              style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
+                            {% if sortie.getNoEtat().getLibelle()!="Annulée" %}
+                                <p class="card-text">{{ sortie.getDateDebut()|date("d/m/Y") }}</p>
+                            {% else %}
+                                <p class="card-text" style="color: white;background: #ff5f33;text-align: center">Annulé</p>
+                            {% endif %}
+                            <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations"><i
+                                        class="fas fa-info-circle"></i></a>
+                            {% if sortie.getNoOrganisateur().getId()==app.user.id %}
+                                <div class="row">
+                                     {% if sortie.getNoEtat().getLibelle()=="Créée" or  sortie.getNoEtat().getLibelle()=="Ouverte" %}
+                                    <a href="{{ path('edit_sortie',{ 'id': sortie.getId() }) }}"><i
+                                                class="fas fa-edit"></i></a>
+                                    -
+                                     {% endif %}
+                                    {% if sortie.getNoEtat().getLibelle()=="Créée" or  sortie.getNoEtat().getLibelle()=="Ouverte" or sortie.getNoEtat().getLibelle()=="Clôturée" %}
+                                        <a href="{{ path('cancel_sortie',{ 'id': sortie.getId() }) }}"><i
+                                                    class="fas fa-calendar-times"></i></a>
+                                        -
+                                    {% endif %}
+                                    <form method="post"
+                                          action="{{ path("sortie_delete", {'id' : sortie.getId() }) }}"
+                                          onsubmit="return confirm('Confirmation de la suppression ?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.getId()) }}">
+                                        <button class="btn btn-link fas fa-trash-alt"></button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </a>
         {% endif %}
     {% endfor %}
     {% else %}

@@ -26,12 +26,28 @@ class SortieRepository extends ServiceEntityRepository
          $test=$this->createQueryBuilder('s')
             ->select('s')
             ->innerJoin('s.no_organisateur', 'p', Join::WITH, 'p.id =:id')
+             ->innerJoin('s.no_etat', 'a', Join::WITH)
+             ->where("a.libelle not in ('Archivée')")
             ->setParameter('id', $id)
             ->getQuery()
              ->getResult()
             ;
 
          return $test;
+    }
+    public function findAllExceptArchivee($id){
+        $test=$this->createQueryBuilder('s')
+            ->select('s')
+            ->innerJoin('s.no_organisateur', 'p', Join::WITH)
+            ->innerJoin('s.no_etat', 'a', Join::WITH)
+            ->where("a.libelle not in ('Archivée')")
+            ->andWhere('((a.libelle in (\'Créée\') and p.id=:id) OR ((a.libelle not in (\'Créée\'))))')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $test;
     }
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
