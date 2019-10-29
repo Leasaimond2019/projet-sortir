@@ -65,7 +65,10 @@ class SortieFixtureCommand extends Command
                 $this->faker->dateTimeBetween($startDate = "- 3 months", $endDate = "now")
             );
             $sortie->setDuree(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->numberBetween($min = 1000, $max = 9000)
+                $this->faker->numberBetween($min = 1000, $max = 9000)
+            );
+            $sortie->setDateFin(
+                clone $sortie->getDateDebut()->add(new \DateInterval('PT' . $sortie->getDuree() . 'M'))
             );
             $sortie->setDateCloture(
                 $this->faker->dateTimeBetween($startDate = "- 3 months", $endDate = "now")

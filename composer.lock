@@ -1370,16 +1370,16 @@
         },
         {
             "name": "gsylvestre/symfony-faker-fixtures",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gsylvestre/symfony-faker-fixtures.git",
-                "reference": "e3945eaeb6b2431e928336a08360bd13d69ec09e"
+                "reference": "29624b5ec9d613691287a1cf2a6ad36181492231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gsylvestre/symfony-faker-fixtures/zipball/e3945eaeb6b2431e928336a08360bd13d69ec09e",
-                "reference": "e3945eaeb6b2431e928336a08360bd13d69ec09e",
+                "url": "https://api.github.com/repos/gsylvestre/symfony-faker-fixtures/zipball/29624b5ec9d613691287a1cf2a6ad36181492231",
+                "reference": "29624b5ec9d613691287a1cf2a6ad36181492231",
                 "shasum": ""
             },
             "require": {
@@ -1412,7 +1412,7 @@
             ],
             "description": "Fast generation of realistic fake datas for your database. Symfony/Doctrine/Faker/Make super combo.",
             "homepage": "https://github.com/gsylvestre/symfony-faker-fixtures",
-            "time": "2019-10-29T06:03:20+00:00"
+            "time": "2019-10-29T12:30:26+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
