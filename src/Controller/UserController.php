@@ -23,9 +23,6 @@ class UserController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -57,7 +54,7 @@ class UserController extends AbstractController
 
             $manager->persist($user);
             $manager->flush();
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('sortie_list');
         }
 
         return $this->render('user/editProfil.html.twig', [
@@ -83,7 +80,7 @@ class UserController extends AbstractController
             $user->setActif(true);
             $em->persist($user);
             $em->flush();
-            return $this->redirectToRoute("home");
+            return $this->redirectToRoute("sortie_list");
 
         }
 
