@@ -15,6 +15,8 @@ use App\Form\SiteType;
 use App\Form\SortieType;
 use App\Form\UserType;
 use App\Repository\EtatRepository;
+use App\Repository\UserRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -24,6 +26,7 @@ use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -75,9 +78,12 @@ class SortieController extends AbstractController
         if (isset($options)) {
             $sorties = $sortiesRepo->findBySeveralFields($options);
         } else {
-            $sorties = $sortiesRepo->findAll();
+            $sorties = $sortiesRepo->findAllExceptArchivee($this->getUser()->getId());
         }
 
+        foreach ($sorties as $sortie) {
+
+        }
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
             'searchForm' => $searchForm->createView()
@@ -105,7 +111,7 @@ class SortieController extends AbstractController
 
         // Création d'une sortie
         $sortie = new Sortie();
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(SortieType::class, $sortie,["modification"=>false]);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
@@ -258,5 +264,42 @@ class SortieController extends AbstractController
         return $this->render("sortie/cancel.html.twig", [
             "sortie" => $sortie
         ]);
+    }
+
+    /**
+     * @Route("/sortie/Edit{id}", name="edit_sortie")
+     */
+    public function editSortie($id, Request $request, EntityManagerInterface $em): Response
+    {
+        $sortie = $em->getRepository(Sortie::class)->find($id);
+        if ($sortie == null) {
+            throw $this->createNotFoundException('Sortie inconnu');
+        }
+        $sortieForm = $this->createForm(SortieType::class, $sortie,["modification"=>true]);
+        $sortieForm->handleRequest($request);
+
+
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            if($request->request->get('publish')!= null){
+
+                $sortie->setNoEtat($this->getDoctrine()->getRepository(Etat::class)->findOneBy(["libelle"=>"Ouverte"]));
+                $em->persist($sortie);
+                $em->flush();
+                $this->addFlash('success', "La sortie a été publiée");
+                return $this->redirectToRoute("sortie_detail",
+                    ['id' => $sortie->getId()]);
+            }
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', "La sortie a été modifiée");
+            return $this->redirectToRoute("sortie_detail",
+                ['id' => $sortie->getId()]);
+        }
+        return $this->render("sortie/edit.html.twig", [
+            "sortieForm" => $sortieForm->createView(),
+            "sortie"=>$sortie,
+        ]);
+
     }
 }

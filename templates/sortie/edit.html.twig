@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une sortie | {{ parent() }}{% endblock %}
+
+{% block main %}
+    <h1>Modifier une sortie</h1>
+    {# afficher un formulaire #}
+    {{ form_start(sortieForm) }}
+    {{ form_widget(sortieForm) }}
+    <div style="display: flex;justify-content: space-around">
+    <input type="submit" class="btn btn-primary" name="test" value="Enregistrer">
+    {% if sortie is defined and sortie.getNoEtat().getLibelle()=="Créée" %}
+        <input type="submit" class="btn btn-primary" name="publish" value="Publier la sortie">
+
+    {% endif %}
+
+    <button type="" style="" class="btn btn-primary float-right" onclick="window.history.go(-1)" >Annuler</button>
+
+    {{ form_end(sortieForm) }}
+    <form method="post"
+          action="{{ path("sortie_delete", {'id' : sortie.getId() }) }}"
+          onsubmit="return confirm('Confirmation de la suppression ?');">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.getId()) }}">
+        <button class="btn btn-primary">Supprimer la sortie</button>
+    </form>
+    </div>
+{% endblock %}
