@@ -23,32 +23,35 @@ class SortieRepository extends ServiceEntityRepository
 
     public function findSortieByUser($id)
     {
-         $test=$this->createQueryBuilder('s')
+        $test = $this->createQueryBuilder('s')
             ->select('s')
             ->innerJoin('s.no_organisateur', 'p', Join::WITH, 'p.id =:id')
             ->setParameter('id', $id)
             ->getQuery()
-             ->getResult()
-            ;
+            ->getResult();
 
-         return $test;
+        return $test;
     }
-    // /**
-    //  * @return Sortie[] Returns an array of Sortie objects
-    //  */
-    /*
-    public function findByExampleField($value)
+
+    /**
+     * @return Sortie[] Returns an array of Sortie objects
+     */
+
+    public function findBySeveralFields($options)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $requete = $this->createQueryBuilder("s");
+        $requete -> leftJoin("s.no_inscription", "i");
+
+        //foreach [nom colone; valeur ]
+        foreach ($options as $option) {
+            $requete -> andWhere($option);
+        }
+//        dump($requete->getQuery());
+//        die();
+        return $requete->getQuery()
+                        ->getResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Sortie

@@ -86,6 +86,11 @@ class Sortie
      */
     private $motif;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_fin;
+
     public function __construct()
     {
         $this->no_inscription = new ArrayCollection();
@@ -286,6 +291,18 @@ class Sortie
     public function setMotif($motif): void
     {
         $this->motif = $motif;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->date_fin;
+    }
+
+    public function setDateFin(\DateTimeInterface $date_fin): self
+    {
+        $this->date_fin = $date_fin;
+
+        return $this;
     }
 
 }

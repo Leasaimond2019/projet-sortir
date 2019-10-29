@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Lieu;
+use App\Entity\SearchSortie;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\LieuType;
+use App\Form\SearchSortieType;
 use App\Form\SiteType;
 use App\Form\SortieType;
 use App\Form\UserType;
 use App\Repository\EtatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\Entity;
@@ -27,16 +30,57 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortie", name="sortie_list")
+     * @Route("/liste", name="sortie_list")
      */
-    public function list()
+    public function list(EntityManagerInterface $em, Request $request)
     {
+        // Gérer la recherche
+        $search = new SearchSortie();
+        $searchForm = $this->createForm(SearchSortieType::class, $search);
+        $searchForm->handleRequest($request);
+
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            $options = array();
+
+            if (!is_null($search->getSite())) {
+                $options[] = "s.no_site = " . $search->getSite()->getId();
+            }
+            if (!is_null($search->getNom())) {
+                $options[] = "s.nom LIKE '%" . $search->getNom() . "%'";
+            }
+            if (!is_null($search->getDateDebut()) && !is_null($search->getDateFin())) {
+                $options[] = "s.date_debut BETWEEN '" . $search->getDateDebut()->format("Ymdhis")
+                    . "' AND '" . $search->getDateFin()->format("YmdHis") . "'";
+            }
+            if ($search->getChkOrganisateur()) {
+                $options[] = "s.no_organisateur = " . $this->getUser()->getId();
+            }
+            if ($search->getChkInscrit() && !$search->getChkNonInscrit()) {
+                $options[] = "i.no_user = " . $this->getUser()->getId();
+            }
+            if ($search->getChkNonInscrit() && !$search->getChkInscrit()) {
+                $options[] = "i.no_user != " . $this->getUser()->getId() . " OR i.no_user IS NULL";
+            }
+            if ($search->getChkPasse()) {
+                $now = new \DateTime("now");
+                $options[] = "s.date_fin <= '" . $now->format("YmdHis") . "'";
+            }
+        }
+
+//        dump(isset($options));
+//        die();
+
         // récupérer les sorties depuis la base de données
         $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
-        $sorties = $sortiesRepo->findAll();
+        if (isset($options)) {
+            $sorties = $sortiesRepo->findBySeveralFields($options);
+        } else {
+            $sorties = $sortiesRepo->findAll();
+        }
 
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
+            'searchForm' => $searchForm->createView()
         ]);
     }
 
@@ -72,8 +116,9 @@ class SortieController extends AbstractController
 
             // ajout de l'user en cours
             $sortie->setNoOrganisateur($this->getUser());
-            $em->persist($sortie);
+            $sortie->setDateFin(clone $sortie->getDateDebut()->add(new \DateInterval('PT' . $sortie->getDuree() . 'M')));
             $sortie->getUrlPhoto() == null ? $sortie->setUrlPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png") : "";
+            $em->persist($sortie);
             $em->flush();
             $this->addFlash('success', "La sortie a été créée");
             return $this->redirectToRoute("sortie_list");
@@ -95,42 +140,38 @@ class SortieController extends AbstractController
         // récupérer la fiche article dans la base de données
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
-        $dateDebut = clone $sortie->getDateDebut();
-        $dateheureFinSortie = $dateDebut->add(new \DateInterval('PT'.$sortie->getDuree().'M'));
-        $dateCourante = new \DateTime("now") ;
+        $dateheureFinSortie = $sortie->getDateFin();
+        $dateCourante = new \DateTime("now");
         $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
         // update de l'état de la sortie
-        if($dateCourante > $dateheureFinSortie && $sortie->getNoEtat()->getLibelle() != "Annulée") {
-            $sortie->setNoEtat($etatRepo->findOneBy(["libelle"=>"Passée"]));
+        if ($dateCourante > $dateheureFinSortie && $sortie->getNoEtat()->getLibelle() != "Annulée") {
+            $sortie->setNoEtat($etatRepo->findOneBy(["libelle" => "Passée"]));
         } elseif ($sortie->getDateDebut() < $dateCourante && $dateCourante < $dateheureFinSortie && $sortie->getNoEtat()->getLibelle() != "Annulée") {
-            $sortie->setNoEtat($etatRepo->findOneBy(["libelle"=>"Activité en cours"]));
+            $sortie->setNoEtat($etatRepo->findOneBy(["libelle" => "Activité en cours"]));
         }
         // inscriptions de la sortie
         $inscriptions = $sortie->getNoInscription();
 
         if ($sortie == null) {
-            throw $this->createNotFoundException("Article inconnu");
+            throw $this->createNotFoundException("Sortie inconnue");
         }
 
         $inscriptionOuvertes = true;
-
-        if(count($inscriptions) > $sortie->getNbInscriptionMax()
-            || $sortie->getDateCloture() < new \DateTime('now')){
+        if (count($inscriptions) >= $sortie->getNbInscriptionMax()
+            || $sortie->getDateCloture() < new \DateTime('now')) {
             $inscriptionOuvertes = false;
         }
-        $userInscrit = false;
         $noInscription = $this->getDoctrine()->getRepository(Inscription::class);
-        $noInscription = $noInscription->findByUserAndSortie($this->getUser(),$sortie);
-        if(!empty($noInscription)) {
-            $userInscrit = true;
+        $noInscription = $noInscription->findByUserAndSortie($this->getUser(), $sortie);
+        if (!empty($noInscription)) {
             $inscriptionId = $noInscription[0]->getId();
         } else {
             $inscriptionId = null;
         }
 
         return $this->render("sortie/detail.html.twig", [
-            "sortie"        =>  $sortie,
-            "inscriptions"  => $inscriptions,
+            "sortie" => $sortie,
+            "inscriptions" => $inscriptions,
             "ouvert" => $inscriptionOuvertes,
             "inscriptionId" => $inscriptionId
         ]);
@@ -186,7 +227,7 @@ class SortieController extends AbstractController
         $sortie = $sortieRepo->find($id);
 
         if ($sortie == null) {
-            throw $this->createNotFoundException("Sortie inconnu");
+            throw $this->createNotFoundException("Sortie inconnue");
         }
 
         return $this->render("sortie/cancel.html.twig", [
@@ -201,7 +242,7 @@ class SortieController extends AbstractController
     {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         if ($sortie == null) {
-            throw $this->createNotFoundException('Sortie inconnu');
+            throw $this->createNotFoundException('Sortie inconnue');
         }
 
         if ($request->request->get('motif')) {
@@ -210,7 +251,7 @@ class SortieController extends AbstractController
             $sortie->setNoEtat($numEtat);
             $em->persist($sortie);
             $em->flush();
-            $this->addFlash('success', "La sortie a été modifié");
+            $this->addFlash('success', "La sortie a été modifiée");
             return $this->redirectToRoute("sortie_detail",
                 ['id' => $sortie->getId()]);
         }

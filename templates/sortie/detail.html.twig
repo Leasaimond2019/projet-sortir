@@ -10,7 +10,7 @@
         <p class="mb-0">Organisée par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}"
                                          class="stretched-link"
                                          style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
-        <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à h:i") }}</p>
+        <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à H:i") }}</p>
         <p>Site rattaché : {{ sortie.getNoSite.getNomSite }}</p>
     </div>
     {% if(sortie.getNoEtat.getLibelle == "Annulée") %}
@@ -43,6 +43,7 @@
         <div class="col-md-8 col-sm-12">
             <h4>Inscription</h4>
             <p>Date limite d'inscription : {{ sortie.getDateCloture|date("d/m/Y à H:i") }}</p>
+            <p>Nombre d'inscrits : {{ inscriptions|length }}/{{ sortie.getNbInscriptionMax }}</p>
             {% if ouvert %}
                 {% if(inscriptionId is null) %}
                     <a href="{{ path("inscription_create", {'id' : sortie.id}) }}"
