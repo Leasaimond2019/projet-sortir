@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,19 +29,20 @@ class UserType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'mapped' => false,
+                'empty_data' => '',
                 'invalid_message' => "Vous n'avez pas saisi le même mot de passe",
+                'required'=>false,
                 'first_options' => [
-                    'label' => 'Votre mot de passe',
-                    'required'=>true,
-                    'attr' => [
-                        'placeholder' => "Votre mot de passe"
+                    'label' => 'Votre nouveau mot de passe',
+                        'attr' => [
+                        'placeholder' => "Votre nouveau mot de passe"
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirmation de votre mot de passe',
-                    'required'=>true,
+                    'label' => 'Confirmation de votre nouveau mot de passe',
                     'attr' => [
-                        'placeholder' => "Confirmation de votre mot de passe"
+                        'placeholder' => "Confirmation de votre nouveau mot de passe"
                     ]
                 ]
             ])
@@ -52,17 +54,19 @@ class UserType extends AbstractType
                 ]
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prenom',
+                'label' => 'Prénom',
                 'required'=>true,
                 'attr' => [
                     'placeholder' => "Votre prénom"
                 ]
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Telephone',
+                'label' => 'Téléphone',
                 'required'=>false,
                 'attr' => [
-                    'placeholder' => "Votre numéro de téléphone"
+                    'placeholder' => "Votre numéro de téléphone",
+                    'maxlength'=>10,
+
                 ]
             ])
             ->add('mail', EmailType ::class, [
@@ -82,7 +86,12 @@ class UserType extends AbstractType
                     return $er->createQueryBuilder('c');
                 }
             ])
-
+            ->add('oldPassword', PasswordType::class, array(
+                'mapped' => false,
+                'label'=>'Saisissez votre mot de passe pour enregistrer',
+                'attr'=>[
+                    'placeholder' => "Votre ancien mot de passe",
+                ]))
 
         ;
     }
