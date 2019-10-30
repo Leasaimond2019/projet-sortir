@@ -4,20 +4,26 @@
 
 {% block main %}
     {# afficher les données de l'utilisateur #}
+    <h1 align="center">{{ user.getUsername() }}</h1>
+    <button type="" style="" class="btn btn-link" onclick="window.history.go(-1)"><i class="fas fa-arrow-left"></i>
+        Retour
+    </button>
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="embed-responsive embed-responsive-1by1">
+                <img class="embed-responsive-item" src="{{ user.getPhoto }}" alt="Image de profil"
+                     style="object-fit: cover">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-8 col-lg-9">
 
-    <div class="embed-responsive embed-responsive-16by9">
-        <img class="embed-responsive-item" src="{{ user.getPhoto }}" alt="Image de profil"
-             style="object-fit: cover">
-    </div>
-    <div class="container">
-        <h1 align="center">{{ user.getUsername() }}</h1>
-        <p >Prénom : {{ user.getPrenom() }}</p>
-        <p >Nom : {{ user.getNom() }}</p>
-        <p >Téléphone : {{ user.getTelephone() }}</p>
-        <p>Email : {{ user.getMail() }}</p>
-        <p >Ville de rattachement : {{ user.getNoSite().getNomSite }}</p>
+            <p>Prénom : {{ user.getPrenom() }}</p>
+            <p>Nom : {{ user.getNom() }}</p>
+            <p>Téléphone : {{ user.getTelephone() }}</p>
+            <p>Email : {{ user.getMail() }}</p>
+            <p>Ville de rattachement : {{ user.getNoSite().getNomSite }}</p>
 
+        </div>
     </div>
-    <button type=""  style="" class="btn btn-outline-dark float-right" onclick="window.history.go(-1)" >Retour</button>
 {% endblock %}
 
