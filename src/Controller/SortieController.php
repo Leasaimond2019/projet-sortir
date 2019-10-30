@@ -209,11 +209,14 @@ class SortieController extends AbstractController
         // récupérer les sorties depuis la base de données
         $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sorties = $sortiesRepo->findSortieByUser($this->getUser()->getId());
-
+        // Récupérer les inscriptions
+        $inscriptions = $this->getDoctrine()->getRepository(Inscription::class);
+        $inscriptions = $inscriptions->findAll();
 
         if (count($sorties) > 0) {
             return $this->render('sortie/list.html.twig', [
                 'sorties' => $sorties,
+                'inscriptions' => $inscriptions,
                 'mesSorties' => true
             ]);
         } else {
