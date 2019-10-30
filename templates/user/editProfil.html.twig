@@ -3,19 +3,27 @@
 {% block title %}Modification du profil{% endblock %}
 
 {% block main %}
-    <div class="container bubble mt-3">
-        <div class="container">
-            <h2 class="bubble-title">Modification de ton Profil</h2>
+    <h1>Modification de ton Profil</h1>
+    <button type="" style="" class="btn btn-link" onclick="window.history.go(-1)"><i class="fas fa-arrow-left"></i>
+        Retour
+    </button>
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="embed-responsive embed-responsive-1by1">
+                <img class="embed-responsive-item"
+                     src="{{ user.getPhoto is null ? 'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png' : user.getPhoto }}"
+                     alt="Image de profil"
+                     style="object-fit: cover">
+            </div>
         </div>
-        <div class="embed-responsive embed-responsive-16by9">
-            <img class="embed-responsive-item" src="{{ user.getPhoto }}" alt="Image de profil"
-                 style="object-fit: cover">
-        </div>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-            <button type="submit"class="btn btn-outline-dark" >Enregistrer les modifications !</button>
+        <div class="col-sm-12 col-md-8 col-lg-9">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="text-sm-center">
+                <button type="submit" class="btn btn-outline-dark">Enregistrer les modifications</button>
+            </div>
             {{ form_end(form) }}
-        <button type=""  style="" class="btn-outline-dark" onclick="window.history.go(-1)" >Retour</button>
+        </div>
     </div>
 {% endblock %}
 

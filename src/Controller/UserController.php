@@ -57,7 +57,7 @@ class UserController extends AbstractController
                     $hash = $encoder->encodePassword($user, $request->request->get('user')['password']['first']);
                     $user->setPassword($hash);
                 }
-                $user->getPhoto() == null ? $user->setPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png") : "";
+                $user->getPhoto() == null ? $user->setPhoto("https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png") : "";
                 $manager->persist($user);
                 $manager->flush();
                 $this->addFlash('success', 'Votre profil à bien été changé !');
@@ -90,7 +90,7 @@ class UserController extends AbstractController
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
             $user->setActif(true);
-            $user->getPhoto() == null ? $user->setPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png") : "";
+            $user->getPhoto() == null ? $user->setPhoto("https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png") : "";
             $em->persist($user);
             $em->flush();
             return $this->redirectToRoute("sortie_list");
