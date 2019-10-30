@@ -1,16 +1,37 @@
 nav {
-    background: #72c697;
+    background: #008a98;
 }
 
-a{
+a,
+.btn-link {
     color: black;
 }
-
-a:hover {
+a:hover,
+.btn-link:hover {
     color: rgba(0, 0, 0, 0.72);
+    text-decoration: none;
 }
+
+.colored {
+    color: #00a0af;
+}
+a.colored:hover {
+    color: #008a98;
+}
+
 
 label.required:after {
     content: " *";
     color: red;
+}
+#divBtnsManage {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 5px;
+}
+
+#divBtnsManage button,
+#divBtnsManage i {
+    padding: 0 5px;
 }

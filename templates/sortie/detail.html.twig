@@ -10,12 +10,20 @@
         <p class="mb-0">Organisée par <a href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}"
                                          class="stretched-link"
                                          style="color: deepskyblue">{{ sortie.getNoOrganisateur().getUsername }}</a></p>
-        <p><i class="fas fa-calendar-alt"></i> le {{ sortie.getDateDebut|date("d/m/Y à H:i") }}</p>
+        <div class="mb-2" style="display: flex;align-items: center; justify-content: flex-end;">
+            <i class="fas fa-calendar-alt mr-2 colored" style="font-size: 25px;"></i>
+            <div style="display: flex; flex-direction: column;">
+                <p class="card-text m-0" title="Début de la sortie">
+                    du {{ sortie.getDateDebut()|date("d/m/Y à H:i") }}</p>
+                <p class="card-text m-0" title="Fin de la sortie">
+                    au {{ sortie.getDateFin()|date("d/m/Y à H:i") }}</p>
+            </div>
+        </div>
         <p>Site rattaché : {{ sortie.getNoSite.getNomSite }}</p>
     </div>
     {% if(sortie.getNoEtat.getLibelle == "Annulée") %}
         <div class="alert alert-warning">Cette sortie a été annulée</div>
-    {% elseif(sortie.getNoEtat.getLibelle == "Passée")  %}
+    {% elseif(sortie.getNoEtat.getLibelle == "Passée") %}
         <div class="alert alert-warning">Cette sortie est passée</div>
     {% elseif(sortie.getNoEtat.getLibelle == "Activité en cours") %}
         <div class="alert alert-warning">Cette sortie est en cours</div>

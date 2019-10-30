@@ -27,7 +27,7 @@ class LieuFixtureCommand extends Command
         parent::__construct($name);
         $this->manager = $doctrine->getManager();
         $this->doctrine = $doctrine;
-        $this->faker = \Faker\Factory::create($locale = 'en_US');
+        $this->faker = \Faker\Factory::create($locale = 'fr_FR');
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -56,13 +56,13 @@ class LieuFixtureCommand extends Command
                 $this->faker->text(30)
             );
             $lieu->setRue(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->text(30)
+                $this->faker->text(30)
             );
             $lieu->setLatitude(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = NULL)
+                $this->faker->latitude(41.3166667,51.0716667)
             );
             $lieu->setLongitude(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = NULL)
+                $this->faker->longitude(-5.151,9.56)
             );
             $lieu->setNoVille(
                 $this->faker->randomElement($allVilleEntities)

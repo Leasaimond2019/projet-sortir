@@ -26,7 +26,7 @@ class EtatFixtureCommand extends Command
         parent::__construct($name);
         $this->manager = $doctrine->getManager();
         $this->doctrine = $doctrine;
-        $this->faker = \Faker\Factory::create($locale = 'en_US');
+        $this->faker = \Faker\Factory::create($locale = 'fr_FR');
         $this->passwordEncoder = $passwordEncoder;
     }
 

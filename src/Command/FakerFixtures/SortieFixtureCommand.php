@@ -30,7 +30,7 @@ class SortieFixtureCommand extends Command
         parent::__construct($name);
         $this->manager = $doctrine->getManager();
         $this->doctrine = $doctrine;
-        $this->faker = \Faker\Factory::create($locale = 'en_US');
+        $this->faker = \Faker\Factory::create($locale = 'fr_FR');
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -57,33 +57,36 @@ class SortieFixtureCommand extends Command
 
         for($i=0; $i<$num; $i++){
             $sortie = new Sortie();
-
+            $dateDeb = $this->faker->dateTimeBetween($startDate = "- 3 months", $endDate = "+ 3 months");
             $sortie->setNom(
                 $this->faker->text(30)
             );
             $sortie->setDateDebut(
-                $this->faker->dateTimeBetween($startDate = "- 3 months", $endDate = "now")
+                $dateDeb
             );
             $sortie->setDuree(
                 $this->faker->numberBetween($min = 1000, $max = 9000)
             );
+            $datefin = clone $dateDeb;
+            $datefin->add(new \DateInterval('PT' . $sortie->getDuree() . 'M'));
+
             $sortie->setDateFin(
-                clone $sortie->getDateDebut()->add(new \DateInterval('PT' . $sortie->getDuree() . 'M'))
+                $datefin
             );
             $sortie->setDateCloture(
-                $this->faker->dateTimeBetween($startDate = "- 3 months", $endDate = "now")
+                $this->faker->dateTimeBetween("-3 months", $dateDeb)
             );
             $sortie->setNbInscriptionMax(
-                $this->faker->numberBetween($min = 1000, $max = 9000)
+                $this->faker->numberBetween($min = 2, $max = 20)
             );
             $sortie->setDescription(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->text(500)
+                $this->faker->text(300)
             );
             $sortie->setUrlPhoto(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->text(250)
+                "http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png"
             );
             $sortie->setMotif(
-                $this->faker->optional($chancesOfValue = 0.5, $default = null)->text(255)
+                $this->faker->text(255)
             );
             $sortie->setNoEtat(
                 $this->faker->randomElement($allEtatEntities)

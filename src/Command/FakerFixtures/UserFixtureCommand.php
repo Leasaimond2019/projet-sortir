@@ -27,7 +27,7 @@ class UserFixtureCommand extends Command
         parent::__construct($name);
         $this->manager = $doctrine->getManager();
         $this->doctrine = $doctrine;
-        $this->faker = \Faker\Factory::create($locale = 'en_US');
+        $this->faker = \Faker\Factory::create($locale = 'fr_FR');
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -64,10 +64,10 @@ class UserFixtureCommand extends Command
             $hash = $this->passwordEncoder->encodePassword($user, $plainPassword);
             $user->setPassword($hash);
             $user->setNom(
-                $this->faker->text(30)
+                $this->faker->lastName()
             );
             $user->setPrenom(
-                $this->faker->text(30)
+                $this->faker->firstName()
             );
             $user->setTelephone(
                 $this->faker->optional($chancesOfValue = 0.5, $default = null)->text(15)

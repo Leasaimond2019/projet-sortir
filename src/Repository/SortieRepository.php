@@ -41,6 +41,7 @@ class SortieRepository extends ServiceEntityRepository
             ->innerJoin('s.no_etat', 'a', Join::WITH)
             ->where("a.libelle not in ('Archivée')")
             ->andWhere('((a.libelle in (\'Créée\') and p.id=:id) OR ((a.libelle not in (\'Créée\'))))')
+            ->orderBy('s.date_debut', 'DESC')
             ->setParameter('id', $id)
             ->getQuery()
             ->getResult()
@@ -63,6 +64,7 @@ class SortieRepository extends ServiceEntityRepository
         foreach ($options as $option) {
             $requete -> andWhere($option);
         }
+        $requete ->orderBy('s.date_debut', 'DESC');
 //        dump($requete->getQuery());
 //        die();
         return $requete->getQuery()

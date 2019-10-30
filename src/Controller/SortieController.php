@@ -70,9 +70,6 @@ class SortieController extends AbstractController
             }
         }
 
-//        dump(isset($options));
-//        die();
-
         // récupérer les sorties depuis la base de données
         $sortiesRepo = $this->getDoctrine()->getRepository(Sortie::class);
         if (isset($options)) {
@@ -81,11 +78,14 @@ class SortieController extends AbstractController
             $sorties = $sortiesRepo->findAllExceptArchivee($this->getUser()->getId());
         }
 
-        foreach ($sorties as $sortie) {
+        // Récupérer les inscriptions
+        $inscriptions = $this->getDoctrine()->getRepository(Inscription::class);
+        $inscriptions = $inscriptions->findAll();
 
-        }
+
         return $this->render('sortie/list.html.twig', [
             'sorties' => $sorties,
+            'inscriptions' => $inscriptions,
             'searchForm' => $searchForm->createView()
         ]);
     }
