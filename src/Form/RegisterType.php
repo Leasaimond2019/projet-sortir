@@ -54,14 +54,14 @@ class RegisterType extends AbstractType
                 ]
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prenom',
+                'label' => 'Prénom',
                 'required'=>true,
                 'attr' => [
                     'placeholder' => "Prénom"
                 ]
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Telephone',
+                'label' => 'Téléphone',
                 'required'=>false,
                 'attr' => [
                     'placeholder' => "Numéro de téléphone"

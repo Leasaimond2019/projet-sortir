@@ -7,10 +7,10 @@
         <div class="container">
             <h2 class="bubble-title">Modification de ton Profil</h2>
         </div>
-        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_start(form) }}
         {{ form_widget(form) }}
         <div class="form-group text-center">
-            <button class="btn btn-lg btn-success mt-2 ml-0" type="submit">Enregistrer les modifications !</button>
+            <button type="submit"class="btn btn-lg btn-success mt-2 ml-0" >Enregistrer les modifications !</button>
             {{ form_end(form) }}
         </div>
     </div>

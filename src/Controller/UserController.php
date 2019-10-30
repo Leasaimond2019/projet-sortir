@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,18 +44,28 @@ class UserController extends AbstractController
     /**
      * @Route("/monCompte/profil", name="account_profile")
      */
-    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user): Response
+    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user, UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->getUser();
-
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $oldPassword = $request->request->get('user')['oldPassword'];
+            // Si l'ancien mot de passe est bon
+            if ($encoder->isPasswordValid($user, $oldPassword)) {
+                if ($request->request->get('user')['password']['first'] != null && $request->request->get('user')['password']['first'] != "") {
+                    $hash = $encoder->encodePassword($user, $request->request->get('user')['password']['first']);
+                    $user->setPassword($hash);
+                }
+                $manager->persist($user);
+                $manager->flush();
+                $this->addFlash('success', 'Votre profil à bien été changé !');
 
-            $manager->persist($user);
-            $manager->flush();
-            return $this->redirectToRoute('sortie_list');
+                return $this->redirectToRoute('sortie_list');
+            } else {
+                $form->addError(new FormError('Ancien mot de passe incorrect'));
+
+            }
         }
 
         return $this->render('user/editProfil.html.twig', [
