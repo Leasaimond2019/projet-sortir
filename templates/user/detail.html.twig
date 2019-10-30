@@ -5,6 +5,10 @@
 {% block main %}
     {# afficher les données de l'utilisateur #}
 
+    <div class="embed-responsive embed-responsive-16by9">
+        <img class="embed-responsive-item" src="{{ user.getPhoto }}" alt="Image de profil"
+             style="object-fit: cover">
+    </div>
     <div class="container">
         <h1 align="center">{{ user.getUsername() }}</h1>
         <p >Prénom : {{ user.getPrenom() }}</p>

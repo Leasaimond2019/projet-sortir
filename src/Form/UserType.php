@@ -86,6 +86,10 @@ class UserType extends AbstractType
                     return $er->createQueryBuilder('c');
                 }
             ])
+            ->add('photo', TextType::class, [
+                'label' => 'Photo de profil',
+                'required' => false
+            ])
             ->add('oldPassword', PasswordType::class, array(
                 'mapped' => false,
                 'label'=>'Saisissez votre mot de passe pour enregistrer',

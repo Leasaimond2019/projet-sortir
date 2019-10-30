@@ -7,9 +7,12 @@
         <div class="container">
             <h2 class="bubble-title">Modification de ton Profil</h2>
         </div>
+        <div class="embed-responsive embed-responsive-16by9">
+            <img class="embed-responsive-item" src="{{ user.getPhoto }}" alt="Image de profil"
+                 style="object-fit: cover">
+        </div>
         {{ form_start(form) }}
         {{ form_widget(form) }}
-
             <button type="submit"class="btn btn-outline-dark" >Enregistrer les modifications !</button>
             {{ form_end(form) }}
         <button type=""  style="" class="btn-outline-dark" onclick="window.history.go(-1)" >Retour</button>

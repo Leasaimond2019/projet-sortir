@@ -57,6 +57,7 @@ class UserController extends AbstractController
                     $hash = $encoder->encodePassword($user, $request->request->get('user')['password']['first']);
                     $user->setPassword($hash);
                 }
+                $user->getPhoto() == null ? $user->setPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png") : "";
                 $manager->persist($user);
                 $manager->flush();
                 $this->addFlash('success', 'Votre profil à bien été changé !');
@@ -89,6 +90,7 @@ class UserController extends AbstractController
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
             $user->setActif(true);
+            $user->getPhoto() == null ? $user->setPhoto("http://www.stleos.uq.edu.au/wp-content/uploads/2016/08/image-placeholder-350x350.png") : "";
             $em->persist($user);
             $em->flush();
             return $this->redirectToRoute("sortie_list");
@@ -96,7 +98,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/register.html.twig', [
-            'registerForm' => $registerForm->createView()
+            'registerForm' => $registerForm->createView(),
         ]);
     }
 
