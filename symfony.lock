@@ -96,6 +96,18 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
+    "fzaninotto/faker": {
+        "version": "v1.8.0"
+    },
+    "giggsey/libphonenumber-for-php": {
+        "version": "8.10.21"
+    },
+    "giggsey/locale": {
+        "version": "1.8"
+    },
+    "gsylvestre/symfony-faker-fixtures": {
+        "version": "v1.0.3"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },

@@ -1,4 +1,51 @@
+nav {
+    background: #008a98;
+}
+.navbar-brand img {
+    max-width: 110px;
+}
+a,
+.btn-link {
+    color: black;
+}
+a:hover,
+.btn-link:hover {
+    color: rgba(0, 0, 0, 0.72);
+    text-decoration: none;
+}
+
+.colored {
+    color: #00a0af;
+}
+a.colored:hover {
+    color: #008a98;
+}
+
+
 label.required:after {
     content: " *";
     color: red;
+}
+#divBtnsManage {
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
+}
+
+#divBtnsManage button,
+#divBtnsManage i {
+    padding: 0 5px;
+}
+
+.btns-gestion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btns-gestion form {
+    display: flex;
+}
+.btns-gestion  button,
+.btns-gestion i {
+    padding: 0 5px;
 }

@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,9 +24,6 @@ class UserController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -44,25 +42,36 @@ class UserController extends AbstractController
     }
 
     /**
-    * @Route("/monCompte/profil", name="account_profile")
-    */
-    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user) : Response
+     * @Route("/monCompte/profil", name="account_profile")
+     */
+    public function profileEdit(Request $request, ObjectManager $manager, UserRepository $user, UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->getUser();
-
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $oldPassword = $request->request->get('user')['oldPassword'];
+            // Si l'ancien mot de passe est bon
+            if ($encoder->isPasswordValid($user, $oldPassword)) {
+                if ($request->request->get('user')['password']['first'] != null && $request->request->get('user')['password']['first'] != "") {
+                    $hash = $encoder->encodePassword($user, $request->request->get('user')['password']['first']);
+                    $user->setPassword($hash);
+                }
+                $user->getPhoto() == null ? $user->setPhoto("https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png") : "";
+                $manager->persist($user);
+                $manager->flush();
+                $this->addFlash('success', 'Votre profil à bien été changé !');
 
-            $manager->persist($user);
-            $manager->flush();
-            return $this->redirectToRoute('home');
+                return $this->redirectToRoute('sortie_list');
+            } else {
+                $form->addError(new FormError('Ancien mot de passe incorrect'));
+
+            }
         }
 
         return $this->render('user/editProfil.html.twig', [
-            'form'=> $form->createView(),
-            'user'=>$user
+            'form' => $form->createView(),
+            'user' => $user
         ]);
     }
 
@@ -80,14 +89,35 @@ class UserController extends AbstractController
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
+            $user->setActif(true);
+            $user->getPhoto() == null ? $user->setPhoto("https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png") : "";
             $em->persist($user);
             $em->flush();
-            return $this->redirectToRoute("home");
+            return $this->redirectToRoute("sortie_list");
 
         }
 
         return $this->render('user/register.html.twig', [
-            'registerForm' => $registerForm->createView()
+            'registerForm' => $registerForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profil/{id}", name="user_detail",
+     *     requirements={"id"="\d+"}, methods={"POST","GET"})
+     */
+    public function detail($id, Request $request)
+    {
+        // récupérer la fiche article dans la base de données
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+
+        if ($user == null) {
+            throw $this->createNotFoundException("User inconnu");
+        }
+
+        return $this->render("user/detail.html.twig", [
+            "user" => $user
         ]);
     }
 }

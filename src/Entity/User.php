@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -47,11 +48,12 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\Regex(pattern="/^0[0-9]{9}$/", message="Entrez un numéro de téléphone valide")
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=100)
      */
     private $mail;
 
@@ -61,20 +63,25 @@ class User implements UserInterface
     private $actif;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="no_organisateur")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="no_organisateur",cascade={"remove"})
      */
     private $sorties;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users" )
      * @ORM\JoinColumn(nullable=false)
      */
     private $no_site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_user",cascade={"remove"})
      */
     private $no_inscription;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $photo;
 
     public function __construct()
     {
@@ -228,7 +235,7 @@ class User implements UserInterface
         return $this->sorties;
     }
 
-    public function addSorty(Sortie $sorty): self
+    public function addSortie(Sortie $sorty): self
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties[] = $sorty;
@@ -238,7 +245,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): self
+    public function removeSortie(Sortie $sorty): self
     {
         if ($this->sorties->contains($sorty)) {
             $this->sorties->removeElement($sorty);
@@ -290,6 +297,18 @@ class User implements UserInterface
                 $noInscription->setNoUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

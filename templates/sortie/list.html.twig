@@ -2,9 +2,125 @@
 
 {% block title %}Liste des sorties{% endblock %}
 
-{% block body %}
-    <h1>Liste des sorties</h1>
+{% block main %}
+    {% if mesSorties is defined %}
+        <h1>Liste de mes sorties</h1>
+    {% else %}
+        <h1>Liste des sorties</h1>
+        {{ form_start(searchForm, { 'attr' : {
+            'class': 'row',
+            'style' : 'align-items:center;'
+        } }) }}
+        <div class="col-sm-12 col-md-6">
+            {{ form_row(searchForm.site) }}
+            {{ form_row(searchForm.nom) }}
+            <div style="display: flex; flex-flow: wrap; justify-content: space-between;">
+                {{ form_row(searchForm.date_debut) }}
+                {{ form_row(searchForm.date_fin) }}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            {{ form_rest(searchForm) }}
+            <button type="submit" class="btn btn-outline-dark w-100"><i class="fas fa-search"></i> Rechercher</button>
+        </div>
+        {{ form_end(searchForm) }}
+    {% endif %}
+    <div class="row" class="mt-3">
+    {% if sorties is defined %}
     {% for sortie in sorties %}
-        {{sortie.nom}}
+        {% if sortie.getNoEtat().getLibelle()!="Archivée" %}
+            <a href="{{ path("sortie_detail", { "id" : sortie.getId() }) }}" title="Plus d'informations">
+                <div class="col-sm-12 col-md-6 col-lg-4 mt-3">
+                    <div class="card">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <img src="{{ sortie.getUrlPhoto() }}" class="card-img-top embed-responsive-item"
+                                 style="object-fit: cover">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ sortie.getNom() }} </h5>
+                            <p class="small">proposée par <a title="Voir le profil"
+                                                             href="{{ path("user_detail", { "id" : sortie.getNoOrganisateur().getId }) }}"
+                                                             class="colored">{{ sortie.getNoOrganisateur().getUsername }}</a>
+                            </p>
+
+
+                            {% if sortie.getNoEtat.getLibelle == "Annulée" %}
+                                <p class="alert alert-danger text-center mb-0">Activité annulée</p>
+                            {% elseif sortie.getNoEtat.getLibelle == "Passée" %}
+                                <p class="alert alert-warning text-center mb-0">Activité terminée</p>
+                            {% else %}
+                                <div class="mb-2" style="display: flex;align-items: center;">
+                                    <i class="fas fa-calendar-alt mr-2 colored" style="font-size: 25px;"></i>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <p class="card-text m-0" title="Début de la sortie">
+                                            du {{ sortie.getDateDebut()|date("d/m/Y à H:i") }}</p>
+                                        <p class="card-text m-0" title="Fin de la sortie">
+                                            au {{ sortie.getDateFin()|date("d/m/Y à H:i") }}</p>
+                                    </div>
+                                </div>
+                                <p class="card-text mb-0">Fin des inscriptions
+                                    : {{ sortie.getDateCloture()|date("d/m/Y H:i") }}</p>
+                            {% endif %}
+
+                            {% set nbInscriptions = 0 %}
+                            {% for inscription in inscriptions %}
+                                {% if inscription.getNoSortie.getId == sortie.getId %}
+                                    {% set nbInscriptions = nbInscriptions + 1 %}
+                                    {% if inscription.getNoUser == app.user %}
+                                        {% if sortie.getNoEtat.getLibelle != "Annulée" %}
+                                            <p class="alert alert-info text-center mb-0 mt-2"><i class="fas fa-calendar-check"></i> Vous
+                                                êtes inscrit/e</p>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <div class="mt-2" style="
+                                display: flex;
+                                align-items: center;
+                                justify-content: flex-end;
+                            ">
+                                {% if sortie.getNoEtat.getLibelle == "Clôturée" %}
+                                    <span class="badge badge-warning mr-2">Inscription clôturée</span>
+                                {% endif %}
+
+                                <p class="mb-0"><i class="fas fa-users"></i> {{ nbInscriptions }}/{{ sortie.getNbInscriptionMax }}
+                                </p>
+                            </div>
+                            {#                            SI LA SORTIE EST CELLE DE L'USER EN COURS                               #}
+                            {% if sortie.getNoOrganisateur().getId()==app.user.id %}
+                                <div id="divBtnsManage">
+                                    {% if sortie.getNoEtat().getLibelle()=="Créée" or  sortie.getNoEtat().getLibelle()=="Ouverte" %}
+                                        <a title="Modifier la sortie"
+                                           href="{{ path('edit_sortie',{ 'id': sortie.getId() }) }}"><i
+                                                    class="fas fa-edit"></i></a>
+                                    {% endif %}
+                                    {% if sortie.getNoEtat().getLibelle()=="Créée" or  sortie.getNoEtat().getLibelle()=="Ouverte" or sortie.getNoEtat().getLibelle()=="Clôturée" %}
+                                        <a title="Annuler la sortie"
+                                           href="{{ path('cancel_sortie',{ 'id': sortie.getId() }) }}"><i
+                                                    class="fas fa-calendar-times"></i></a>
+                                    {% endif %}
+                                    <form method="post" style="display: flex;"
+                                          action="{{ path("sortie_delete", {'id' : sortie.getId() }) }}"
+                                          onsubmit="return confirm('Confirmation de la suppression ?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token"
+                                               value="{{ csrf_token('delete'~sortie.getId()) }}">
+                                        <button class="btn btn-link fas fa-trash-alt"></button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                            {#                          FIN SI LA SORTIE EST CELLE DE L'USER EN COURS                               #}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endif %}
     {% endfor %}
+    {% else %}
+    <div class="col-12">
+        <h3>Pas de sorties</h3>
+        <p> Vous n'avez pas créer de sorties. Pour en créer une cliquer sur le bouton "Ajouter"</p>
+        <a href="{{ path("sortie_create") }}" class="btn btn-primary">Ajouter</a>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -3,31 +3,27 @@
 {% block title %}Log in!{% endblock %}
 
 {% block main %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
-
     <h1 class="h3 mb-3 font-weight-normal">Login</h1>
-    <label for="inputPseudo" class="sr-only">Pseudo</label>
-    <input type="text" value="{{ last_username }}" name="pseudo" id="inputPseudo" class="form-control" placeholder="Pseudo" required autofocus>
-    <label for="inputPassword" class="sr-only">Mot de passe</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-    <input type="checkbox" id="remember_me" name="_remember_me" checked/>
-    <label for="remember_me">Se souvenir de moi</label>
+        <label for="inputPseudo" class="sr-only">Pseudo</label>
+        <input type="text" value="{{ last_username }}" name="pseudo" id="inputPseudo" class="form-control"
+               placeholder="Pseudo" required autofocus>
+        <label for="inputPassword" class="sr-only">Mot de passe</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe"
+               required>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Connexion
-    </button>
-</form>
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}">
+        <div class="mt-2">
+            <input type="checkbox" id="remember_me" name="_remember_me" checked/>
+            <label for="remember_me">Se souvenir de moi</label>
+            <input class="btn btn-outline-dark ml-2" type="submit" value="Connexion">
+        </div>
+
+
+    </form>
 {% endblock %}

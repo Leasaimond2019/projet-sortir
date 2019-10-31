@@ -78,9 +78,18 @@ class Sortie
     private $no_site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_sortie")
+     * @ORM\OneToMany(targetEntity="App\Entity\Inscription", mappedBy="no_sortie",cascade={"remove"})
      */
     private $no_inscription;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $motif;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_fin;
 
     public function __construct()
     {
@@ -264,6 +273,34 @@ class Sortie
                 $noInscription->setNoSortie(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMotif()
+    {
+        return $this->motif;
+    }
+
+    /**
+     * @param mixed $motif
+     */
+    public function setMotif($motif): void
+    {
+        $this->motif = $motif;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->date_fin;
+    }
+
+    public function setDateFin(\DateTimeInterface $date_fin): self
+    {
+        $this->date_fin = $date_fin;
 
         return $this;
     }

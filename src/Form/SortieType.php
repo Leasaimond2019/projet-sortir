@@ -18,11 +18,22 @@ class SortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom de la sortie'
-            ])
-            ->add('date_debut', DateTimeType::class, [
+            ]);
+            if($options['modification']==true){
+            $builder->add('no_site',EntityType::class,[
+                'class' => 'App\Entity\Site',
+                'choice_label' => 'nom_site',
+                'label' => 'Site',
+                'placeholder' => 'Choisir un site',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er -> createQueryBuilder('l');
+                },
+            ]);}
+            $builder->add('date_debut', DateTimeType::class, [
                 'label' => 'Date et heure de début',
                 'widget' => 'single_text'
             ])
@@ -43,7 +54,8 @@ class SortieType extends AbstractType
                 'label' => 'Description'
             ])
             ->add('url_photo', TextType::class, [
-                'label' => 'Photo de présentation'
+                'label' => 'Photo de présentation',
+                'required' => false
             ])
             ->add('no_lieu', EntityType::class, [
                 'class' => 'App\Entity\Lieu',
@@ -52,16 +64,7 @@ class SortieType extends AbstractType
                 'placeholder' => 'Choisir un lieu',
                 'query_builder' => function(EntityRepository $er) {
                     return $er -> createQueryBuilder('l');
-                }
-            ])
-            ->add('no_site', EntityType::class, [
-                'class' => 'App\Entity\Site',
-                'disabled' => 'true',
-                'choice_label' => 'nom_site',
-                'label' => 'Site organisateur',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er -> createQueryBuilder('s');
-                }
+                },
             ])
         ;
     }
@@ -70,6 +73,8 @@ class SortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'modification'=>null,
+
         ]);
     }
 }

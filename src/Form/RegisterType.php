@@ -54,14 +54,14 @@ class RegisterType extends AbstractType
                 ]
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prenom',
+                'label' => 'Prénom',
                 'required'=>true,
                 'attr' => [
                     'placeholder' => "Prénom"
                 ]
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Telephone',
+                'label' => 'Téléphone',
                 'required'=>false,
                 'attr' => [
                     'placeholder' => "Numéro de téléphone"
@@ -73,10 +73,6 @@ class RegisterType extends AbstractType
                 'attr' => [
                     'placeholder' => "Email"
                 ]
-            ])
-            ->add('actif', CheckboxType::class, [
-                'label' => 'Actif',
-                'required' => false,
             ])
             ->add('no_site', EntityType::class, [
                 'class'=> 'App\Entity\Site',

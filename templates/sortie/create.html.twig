@@ -46,20 +46,25 @@
             {{ form_widget(sortieForm.url_photo) }}
         </div>
         <div class="form-group">
-            {{ form_label(sortieForm.no_site) }}
-            {{ form_errors(sortieForm.no_site) }}
-            {{ form_widget(sortieForm.no_site) }}
+            <label for="site_no_site">Site</label>
+            <select id="site_no_site" name="site[no_site]" required="required" class="form-control" disabled>
+                {% for site in sites %}
+                    <option {{ user.getNoSite() == site ? 'selected ' : '' }}value="{{ site.getId() }}">{{ site.getNomSite() }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="form-group">
             {{ form_label(sortieForm.no_lieu) }}
             {{ form_errors(sortieForm.no_lieu) }}
             <div class="form-inline">
                 {{ form_widget(sortieForm.no_lieu) }}
-                <a href="{{ path("sortie_create") }}" data-toggle='modal' data-target='#creationLieu'>Ajouter</a>
+                <a href="{{ path("sortie_create") }}" data-toggle='modal' data-target='#creationLieu'>
+                    <i class="fas fa-plus-circle"></i>
+                </a>
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Créer</button>
+    <button type="submit" class="btn btn-outline-dark">Créer</button>
     {{ form_end(sortieForm) }}
     {{ include("inc/_popup_createLieu.html.twig", {'lieuForm': lieuForm}) }}
 
