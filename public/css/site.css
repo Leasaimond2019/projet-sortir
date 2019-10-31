@@ -1,7 +1,9 @@
 nav {
     background: #008a98;
 }
-
+.navbar-brand img {
+    max-width: 110px;
+}
 a,
 .btn-link {
     color: black;
@@ -32,5 +34,18 @@ label.required:after {
 
 #divBtnsManage button,
 #divBtnsManage i {
+    padding: 0 5px;
+}
+
+.btns-gestion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btns-gestion form {
+    display: flex;
+}
+.btns-gestion  button,
+.btns-gestion i {
     padding: 0 5px;
 }

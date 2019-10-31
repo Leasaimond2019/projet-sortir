@@ -4,7 +4,9 @@
 
 {% block main %}
     <h1 style="text-align: center">Gérer les sites</h1>
-    <a href="{{ path('add_site') }} " class="btn btn-outline-dark"><i class="fas fa-plus-circle"></i> Ajouter</a>
+    <div class="text-right mb-2">
+        <a id="test" href="{{ path('add_site') }} " class="btn btn-outline-dark"><i class="fas fa-plus-circle"></i> Ajouter un site</a>
+    </div>
     <table class="table" id="table">
         <thead class="thead-dark">
         <tr>
@@ -45,18 +47,15 @@
                         {{ site.getNomSite() }}
                     {% endif %}
                 </td>
-                <td>
-                    <div class="row">
-                        <a href="{{ path('manageID_site',{ 'id': site.id }) }}"><i class="fas fa-edit"></i></a>
-                        -
-                        <form method="post"
-                              action="{{ path("delete_site", {'id' : site.id }) }}"
-                              onsubmit="return confirm('Confirmation de la suppression ?');">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~site.id) }}">
-                            <button class="btn btn-link fas fa-trash-alt"></button>
-                        </form>
-                    </div>
+                <td class="btns-gestion">
+                    <a href="{{ path('manageID_site',{ 'id': site.id }) }}"><i class="fas fa-edit"></i></a>
+                    <form method="post"
+                          action="{{ path("delete_site", {'id' : site.id }) }}"
+                          onsubmit="return confirm('Confirmation de la suppression ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~site.id) }}">
+                        <button class="btn btn-link fas fa-trash-alt"></button>
+                    </form>
                 </td>
             </tr>
         {% endfor %}
@@ -88,13 +87,13 @@
         </div>
     {% endif %}
 {% endblock %}
-{%  block javascripts %}
+{% block javascripts %}
     {{ parent() }}
     <script>
         $(document).ready(function () {
             $('#table').DataTable({
                 language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/French.json",
                 },
                 responsive: true,
             });

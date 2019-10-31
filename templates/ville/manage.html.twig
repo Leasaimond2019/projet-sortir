@@ -4,8 +4,9 @@
 
 {% block main %}
     <h1 style="text-align: center">Gérer les villes</h1>
-    <a href="{{ path('add_city') }} " class="btn btn-outline-dark"><i class="fas fa-plus-circle"></i> Ajouter</a>
-
+    <div class="text-right mb-2">
+        <a id="test" href="{{ path('add_city') }} " class="btn btn-outline-dark"><i class="fas fa-plus-circle"></i> Ajouter une ville</a>
+    </div>
     <table class="table" id="table">
         <thead class="thead-dark">
         <tr>
@@ -47,7 +48,7 @@
                     <td>{{ville.getNomVille()}}</td>
                     <td>{{ville.getCodePostal()}}</td>
                 {% endif %}
-                <td> <div class="row">
+                <td> <div class="btns-gestion">
                         <a href="{{ path('manageID_city',{ 'id': ville.id })}}"><i class="fas fa-edit"></i></a>
                         -
                         <form method="post"

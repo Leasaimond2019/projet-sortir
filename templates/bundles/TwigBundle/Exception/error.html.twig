@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="embed-responsive-1by1 embed-responsive">
+                <img alt="kid fight gif" class="embed-responsive-item" src="https://media1.tenor.com/images/445d84e11e22a7f9124ed94f6a464f6b/tenor.gif?itemid=15430142">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <h1>Une erreur s'est produite</h1>
+            <p>Veuillez réessayer ultérieurement ou contacter le responsable si l'erreur persiste</p>
+            <a class="colored" href="{{ path("sortie_list") }}">Revenir à l'accueil</a>.
+        </div>
+    </div>
+{% endblock %}

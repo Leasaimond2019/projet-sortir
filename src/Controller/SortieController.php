@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/liste", name="sortie_list")
+     * @Route("/list", name="sortie_list")
      */
     public function list(EntityManagerInterface $em, Request $request)
     {
@@ -91,7 +91,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/create",name="sortie_create")
+     * @Route("/create",name="sortie_create")
      * @throws \Exception
      */
     public function create(EntityManagerInterface $em, Request $request)
@@ -227,7 +227,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/Cancel{id}", name="cancel_sortie")
+     * @Route("/sortie/cancel{id}", name="cancel_sortie")
      */
     public function cancelSortie($id, Request $request)
     {
@@ -270,7 +270,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/Edit{id}", name="edit_sortie")
+     * @Route("/edit{id}", name="edit_sortie")
      */
     public function editSortie($id, Request $request, EntityManagerInterface $em): Response
     {
